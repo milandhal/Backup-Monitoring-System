@@ -27,17 +27,22 @@ app.use("/api/backups", backupRoutes);
 app.use("/api/dashboard", dashboardRoutes);
 app.use("/api/schedules", scheduleRoutes);
 
-// Open index.html when visiting 127.0.0.1:5000
+// Open index.html when visiting root
 app.get("/", (req, res) => {
     res.sendFile(path.join(__dirname, "../html/index.html"));
 });
 
-app.listen(5000, "127.0.0.1", () => {
-    console.log("Server Running On Port 5000");
+if (require.main === module) {
+    const PORT = process.env.PORT || 5000;
+    app.listen(PORT, () => {
+        console.log(`Server Running On Port ${PORT}`);
 
-    // Load all active schedules from DB and register cron jobs on startup
-    // Wait 2s for DB connection to be fully ready
-    setTimeout(() => {
-        scheduler.loadAndRegisterAll();
-    }, 2000);
-});
+        // Load all active schedules from DB and register cron jobs on startup
+        // Wait 2s for DB connection to be fully ready
+        setTimeout(() => {
+            scheduler.loadAndRegisterAll();
+        }, 2000);
+    });
+}
+
+module.exports = app;
