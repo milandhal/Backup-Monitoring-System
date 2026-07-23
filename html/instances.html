@@ -1,0 +1,384 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Instances - Database Backup Monitoring System</title>
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome Icons -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <!-- Custom Style Sheet -->
+    <link href="../css/style.css" rel="stylesheet">
+</head>
+<body>
+    <!-- Topbar Navigation -->
+    <nav class="topbar">
+        <a href="dashboard.html" class="topbar-brand">
+            <div class="d-inline-flex align-items-center justify-content-center bg-white" style="width: 36px; height: 36px; border-radius: 6px;">
+                <i class="fas fa-train text-primary" style="font-size: 1.25rem;"></i>
+            </div>
+            <span>Database Backup Monitoring System</span>
+        </a>
+        
+        <div class="topbar-actions">
+            <div class="topbar-icon" id="theme-toggle-btn" title="Toggle Theme mode">
+                <i class="fas fa-moon text-light"></i>
+            </div>
+            
+            <a href="notifications.html" class="topbar-icon text-decoration-none" title="View active notifications">
+                <i class="fas fa-bell"></i>
+                <span class="badge rounded-pill bg-danger notification-count-badge">5</span>
+            </a>
+            
+            <div class="dropdown">
+                <div class="user-profile-btn" data-bs-toggle="dropdown" aria-expanded="false">
+                    <img
+    src="https://cdn-icons-png.flaticon.com/512/3135/3135715.png"
+    alt="User Image"
+    style="width:40px;height:40px;border-radius:50%;object-fit:cover;">
+                    <span class="d-none d-sm-inline">admin</span>
+                    <i class="fas fa-chevron-down ms-1" style="font-size: 0.75rem;"></i>
+                </div>
+                <ul class="dropdown-menu dropdown-menu-end shadow-sm border-0 mt-2">
+                    <li><a class="dropdown-item" href="settings.html"><i class="fas fa-user-cog me-2 text-secondary"></i>My Profile</a></li>
+                    <li><a class="dropdown-item" href="settings.html"><i class="fas fa-cog me-2 text-secondary"></i>System Settings</a></li>
+                    <li><hr class="dropdown-divider"></li>
+                    <li>
+    <a class="dropdown-item text-danger"
+       href="#"
+       id="logoutBtn">
+        <i class="fas fa-sign-out-alt me-2"></i>Sign Out
+    </a>
+</li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Sidebar Collapsible Navigation -->
+    <aside class="sidebar">
+       <div class="sidebar-section-title">
+    Main Control
+</div>
+        <ul class="sidebar-menu">
+            <li class="sidebar-item">
+                <a href="dashboard.html" class="sidebar-link">
+                    <i class="fas fa-tachometer-alt"></i>
+                    <span>Dashboard</span>
+                </a>
+            </li>
+            <li class="sidebar-item active">
+                <a href="instances.html" class="sidebar-link">
+                    <i class="fas fa-server"></i>
+                    <span>Instances</span>
+                </a>
+            </li>
+            <li class="sidebar-item">
+                <a href="add-instance.html" class="sidebar-link">
+                    <i class="fas fa-plus-circle"></i>
+                    <span>Add New Instance</span>
+                </a>
+            </li>
+            <li class="sidebar-item">
+                <a href="configure-backup.html" class="sidebar-link">
+                    <i class="fas fa-calendar-alt"></i>
+                    <span>Configure Backup</span>
+                </a>
+            </li>
+            <li class="sidebar-item">
+                <a href="backup-now.html" class="sidebar-link">
+                    <i class="fas fa-play-circle"></i>
+                    <span>Backup Now</span>
+                </a>
+            </li>
+            <li class="sidebar-item">
+                <a href="backup-history.html" class="sidebar-link">
+                    <i class="fas fa-history"></i>
+                    <span>Backup History</span>
+                </a>
+            </li>
+            <li class="sidebar-item">
+                <a href="reports.html" class="sidebar-link">
+                    <i class="fas fa-chart-bar"></i>
+                    <span>Reports</span>
+                </a>
+            </li>
+            <li class="sidebar-item">
+                <a href="notifications.html" class="sidebar-link">
+                    <i class="fas fa-bell"></i>
+                    <span>Notifications</span>
+                </a>
+            </li>
+            <li class="sidebar-item">
+                <a href="settings.html" class="sidebar-link">
+                    <i class="fas fa-sliders-h"></i>
+                    <span>Settings</span>
+                </a>
+            </li>
+            <li class="sidebar-item mt-4 border-top border-light border-opacity-10 pt-3">
+                <a href="login.html" class="sidebar-link text-danger-hover">
+                    <i class="fas fa-sign-out-alt"></i>
+                    <span>Logout</span>
+                </a>
+            </li>
+        </ul>
+    </aside>
+
+    <!-- Main Content Wrapper -->
+    <main class="main-wrapper page-transition">
+        <div class="d-flex align-items-center justify-content-between mb-4 flex-wrap gap-2">
+            <div>
+                <h4 class="mb-1 fw-bold text-primary"><i class="fas fa-server me-2"></i>Database Instances Registry</h4>
+                <p class="text-muted mb-0" style="font-size: 0.88rem;">Active system configurations and real-time connectivity status badges.</p>
+            </div>
+            <a href="add-instance.html" class="btn btn-primary">
+                <i class="fas fa-plus-circle me-1"></i> Register New Database
+            </a>
+        </div>
+
+        <!-- Filters Grid Bar -->
+        <div class="custom-card mb-4 p-3">
+            <div class="row g-3 align-items-center">
+                <!-- Search -->
+                <div class="col-12 col-md-5">
+                    <div class="input-group">
+                        <span class="input-group-text bg-light text-secondary border-end-0"><i class="fas fa-search"></i></span>
+                        <input type="text" class="form-control bg-light border-start-0 ps-0" id="searchQuery" placeholder="Search by name, IP address, username...">
+                    </div>
+                </div>
+                
+                <!-- Status Filter -->
+                <div class="col-12 col-sm-6 col-md-3">
+                    <div class="d-flex align-items-center gap-2">
+                        <label class="text-secondary fw-semibold small mb-0 text-nowrap"><i class="fas fa-filter me-1"></i>Status:</label>
+                        <select class="form-select bg-light" id="statusFilter">
+                            <option value="All">All Statuses</option>
+                            <option value="Connected">Connected Only</option>
+                            <option value="Disconnected">Disconnected Only</option>
+                            <option value="Warning">Warning Flags</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Database RDBMS Filter -->
+                <div class="col-12 col-sm-6 col-md-4 col-xl-3 ms-auto">
+                    <div class="d-flex align-items-center gap-2">
+                        <label class="text-secondary fw-semibold small mb-0 text-nowrap"><i class="fas fa-database me-1"></i>RDBMS:</label>
+                        <select class="form-select bg-light" id="typeFilter">
+                            <option value="All">All RDBMS Types</option>
+                            <option value="Oracle">Oracle Database</option>
+                            <option value="MySQL">MySQL Database</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Instances Grid Container -->
+        <div class="row g-4" id="instancesGrid">
+            <!-- Populated via javascript -->
+            <div class="col-12 text-center py-5">
+                <div class="spinner-border text-primary" role="status"></div>
+                <p class="mt-2 text-muted">Retrieving network database inventory...</p>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer Component -->
+    <footer>
+        <div class="container-fluid px-4">
+            <div class="row align-items-center">
+                <div class="col-md-6 text-center text-md-start">
+                    <h6 class="mb-1 text-white fw-bold">Database Backup Monitoring System &copy; 2026</h6>
+                    <p class="mb-0 text-white-50" style="font-size: 0.75rem;">Designed & Optimized for Government Enterprise Infrastructure Management</p>
+                </div>
+                <div class="col-md-6 text-center text-md-end mt-3 mt-md-0">
+                    <span class="badge bg-secondary py-2 px-3 me-2">Version 1.0</span>
+                    <span class="badge bg-dark py-2 px-3 text-warning font-monospace"><i class="fas fa-shield-alt me-1"></i>NIC Standard Level-4 Sec</span>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Bootstrap Bundle JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- Core Application Logic -->
+   <script src="../js/app.js"></script>
+
+    <script>
+        const loggedUser = localStorage.getItem("loggedUser");
+
+if (!loggedUser) {
+    alert("Please login first");
+    window.location.href = "login.html";
+}
+        document.addEventListener("DOMContentLoaded", () => {
+            // Check for URL filter parameter (e.g. ?status=Connected)
+            const urlParams = new URLSearchParams(window.location.search);
+            const statusParam = urlParams.get('status');
+            if (statusParam) {
+                const statusFilter = document.getElementById("statusFilter");
+                if (statusFilter) {
+                    statusFilter.value = statusParam;
+                }
+            }
+
+            renderInstancesList().then(() => {
+                if (statusParam) {
+                    filterInstances();
+                }
+            });
+
+            // Setup real-time event listeners
+            document.getElementById("searchQuery").addEventListener("input", filterInstances);
+            document.getElementById("statusFilter").addEventListener("change", filterInstances);
+            document.getElementById("typeFilter").addEventListener("change", filterInstances);
+        });
+
+        // Load & display instances from backend
+        async function renderInstancesList() {
+            const instances = await getInstancesFromServer();
+            const grid = document.getElementById("instancesGrid");
+            
+            if (instances.length === 0) {
+                grid.innerHTML = `
+                    <div class="col-12 text-center py-5">
+                        <i class="fas fa-folder-open fa-3x text-muted mb-3"></i>
+                        <h5>No Registered Databases Found</h5>
+                        <p class="text-muted">Use the "Register New Database" form to register your first system.</p>
+                        <a href="add-instance.html" class="btn btn-primary btn-sm mt-2">Get Started</a>
+                    </div>
+                `;
+                return;
+            }
+
+            grid.innerHTML = "";
+            instances.forEach(ins => {
+                let statusBadgeClass = "bg-success";
+                let borderStatusClass = "status-connected";
+                if (ins.status === "Disconnected") {
+                    statusBadgeClass = "bg-danger";
+                    borderStatusClass = "status-disconnected";
+                } else if (ins.status === "Warning") {
+                    statusBadgeClass = "bg-warning text-dark";
+                    borderStatusClass = "status-warning";
+                }
+
+                grid.innerHTML += `
+                    <div class="col-12 col-md-6 col-xl-4 instance-card-wrapper" data-name="${ins.name.toLowerCase()}" data-ip="${ins.ip}" data-status="${ins.status}" data-type="${ins.type}">
+                        <div class="custom-card db-card ${borderStatusClass} h-100 p-4">
+                            <span class="db-type-badge font-monospace"><i class="fas fa-code-branch me-1"></i>${ins.type}</span>
+                            
+                            <h5 class="fw-bold text-dark mt-2 mb-1">${ins.name}</h5>
+                            <code class="text-primary fw-semibold d-block mb-3" style="font-size: 0.85rem;">IP: ${ins.ip}:${ins.port}</code>
+                            
+                            <div class="row g-2 mb-3 border-top border-bottom py-3 border-light-subtle">
+                                <div class="col-6">
+                                    <small class="text-muted d-block" style="font-size: 0.72rem;">STATUS</small>
+                                    <span class="badge ${statusBadgeClass} font-monospace" style="font-size: 0.7rem;">${ins.status}</span>
+                                </div>
+                                <div class="col-6">
+                                    <small class="text-muted d-block" style="font-size: 0.72rem;">SYS USER</small>
+                                    <span class="fw-semibold text-secondary font-monospace" style="font-size: 0.8rem;"><i class="fas fa-user-circle me-1"></i>${ins.username}</span>
+                                </div>
+                                <div class="col-12 mt-2">
+                                    <small class="text-muted d-block" style="font-size: 0.72rem;">LAST SUCCESSFUL BACKUP</small>
+                                    <span class="fw-bold text-secondary font-monospace" style="font-size: 0.8rem;"><i class="fas fa-clock me-1 text-primary"></i>${ins.lastBackup}</span>
+                                </div>
+                                <div class="col-12 mt-2">
+                                    <small class="text-muted d-block" style="font-size: 0.72rem;">BACKUP DIRECTORY PATH</small>
+                                    <code class="text-secondary font-monospace" style="font-size: 0.72rem; word-break: break-all;">${ins.backupLocation}</code>
+                                </div>
+                            </div>
+                            
+                            <div class="d-flex gap-2 flex-wrap mt-auto pt-2 justify-content-between">
+                                <div class="d-flex gap-1.5">
+                                    <a href="instance-details.html?id=${ins.id}" class="btn btn-outline-primary btn-sm px-2.5" title="View health logs and parameters">
+                                        <i class="fas fa-eye me-1"></i> Details
+                                    </a>
+                                    <a href="configure-backup.html?id=${ins.id}" class="btn btn-outline-secondary btn-sm px-2.5" title="Configure backup schedule">
+                                        <i class="fas fa-calendar-alt"></i>
+                                    </a>
+                                    <a href="backup-now.html?id=${ins.id}" class="btn btn-maroon btn-sm px-3" title="Trigger instant backup">
+                                        <i class="fas fa-play me-1"></i> Run
+                                    </a>
+                                </div>
+                                <button onclick="deleteInstance('${ins.id}', '${ins.name}')" class="btn btn-outline-danger btn-sm px-2" title="Unregister database">
+                                    <i class="fas fa-trash-alt"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            });
+        }
+
+        // Search & Filter algorithm
+        function filterInstances() {
+            const query = document.getElementById("searchQuery").value.toLowerCase();
+            const status = document.getElementById("statusFilter").value;
+            const type = document.getElementById("typeFilter").value;
+            
+            const cards = document.querySelectorAll(".instance-card-wrapper");
+            let visibleCount = 0;
+
+            cards.forEach(card => {
+                const cName = card.getAttribute("data-name");
+                const cIp = card.getAttribute("data-ip");
+                const cStatus = card.getAttribute("data-status");
+                const cType = card.getAttribute("data-type");
+
+                const matchesQuery = cName.includes(query) || cIp.includes(query);
+                const matchesStatus = status === "All" || cStatus === status;
+                const matchesType = type === "All" || cType === type;
+
+                if (matchesQuery && matchesStatus && matchesType) {
+                    card.style.display = "block";
+                    visibleCount++;
+                } else {
+                    card.style.display = "none";
+                }
+            });
+        }
+
+        // Deletion confirmation handler
+        async function deleteInstance(id, name) {
+            if (confirm(`CRITICAL WARNING: Are you sure you want to unregister instance '${name}'?\nThis action clears its active alerts & scheduling configurations from this terminal.`)) {
+                try {
+                    const response = await fetch(`http://127.0.0.1:5000/api/instances/${id}`, {
+                        method: "DELETE"
+                    });
+                    const result = await response.json();
+                    
+                    // Show notification and refresh the list
+                    showToast("System Unregistered", `Database instance '${name}' was successfully removed from the active monitoring grid.`, "danger");
+                    renderInstancesList();
+                } catch (err) {
+                    console.error("Failed to delete instance:", err);
+                    showToast("Error", "Failed to delete instance from server.", "danger");
+                }
+            }
+        }
+
+        const logoutBtn =
+    document.getElementById("logoutBtn");
+
+if (logoutBtn) {
+
+    logoutBtn.addEventListener(
+        "click",
+        () => {
+
+            localStorage.removeItem(
+                "loggedUser"
+            );
+
+            window.location.href =
+                "login.html";
+        }
+    );
+}
+    </script>
+</body>
+</html>

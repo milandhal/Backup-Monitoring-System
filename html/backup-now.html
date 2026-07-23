@@ -1,0 +1,486 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Backup Now - Database Backup Monitoring System</title>
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome Icons -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <!-- Custom Style Sheet -->
+    <link href="../css/style.css" rel="stylesheet">
+</head>
+<body>
+    <!-- Topbar Navigation -->
+    <nav class="topbar">
+        <a href="dashboard.html" class="topbar-brand">
+            <div class="d-inline-flex align-items-center justify-content-center bg-white" style="width: 36px; height: 36px; border-radius: 6px;">
+                <i class="fas fa-train text-primary" style="font-size: 1.25rem;"></i>
+            </div>
+            <span>Database Backup Monitoring System</span>
+        </a>
+        
+        <div class="topbar-actions">
+            <div class="topbar-icon" id="theme-toggle-btn" title="Toggle Theme mode">
+                <i class="fas fa-moon text-light"></i>
+            </div>
+            
+            <a href="notifications.html" class="topbar-icon text-decoration-none" title="View active notifications">
+                <i class="fas fa-bell"></i>
+                <span class="badge rounded-pill bg-danger notification-count-badge">5</span>
+            </a>
+            
+            <div class="dropdown">
+                <div class="user-profile-btn" data-bs-toggle="dropdown" aria-expanded="false">
+                    <img
+    src="https://cdn-icons-png.flaticon.com/512/3135/3135715.png"
+    alt="User Image"
+    style="width:40px;height:40px;border-radius:50%;object-fit:cover;">
+                    <span class="d-none d-sm-inline">admin</span>
+                    <i class="fas fa-chevron-down ms-1" style="font-size: 0.75rem;"></i>
+                </div>
+                <ul class="dropdown-menu dropdown-menu-end shadow-sm border-0 mt-2">
+                    <li><a class="dropdown-item" href="settings.html"><i class="fas fa-user-cog me-2 text-secondary"></i>My Profile</a></li>
+                    <li><a class="dropdown-item" href="settings.html"><i class="fas fa-cog me-2 text-secondary"></i>System Settings</a></li>
+                    <li><hr class="dropdown-divider"></li>
+                    <li>
+    <a class="dropdown-item text-danger"
+       href="#"
+       id="logoutBtn">
+
+        <i class="fas fa-sign-out-alt me-2"></i>
+        Sign Out
+
+    </a>
+</li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Sidebar Collapsible Navigation -->
+    <aside class="sidebar">
+       <div class="sidebar-section-title">
+    Main Control
+</div>
+        <ul class="sidebar-menu">
+            <li class="sidebar-item">
+                <a href="dashboard.html" class="sidebar-link">
+                    <i class="fas fa-tachometer-alt"></i>
+                    <span>Dashboard</span>
+                </a>
+            </li>
+            <li class="sidebar-item">
+                <a href="instances.html" class="sidebar-link">
+                    <i class="fas fa-server"></i>
+                    <span>Instances</span>
+                </a>
+            </li>
+            <li class="sidebar-item">
+                <a href="add-instance.html" class="sidebar-link">
+                    <i class="fas fa-plus-circle"></i>
+                    <span>Add New Instance</span>
+                </a>
+            </li>
+            <li class="sidebar-item">
+                <a href="configure-backup.html" class="sidebar-link">
+                    <i class="fas fa-calendar-alt"></i>
+                    <span>Configure Backup</span>
+                </a>
+            </li>
+            <li class="sidebar-item active">
+                <a href="backup-now.html" class="sidebar-link">
+                    <i class="fas fa-play-circle"></i>
+                    <span>Backup Now</span>
+                </a>
+            </li>
+            <li class="sidebar-item">
+                <a href="backup-history.html" class="sidebar-link">
+                    <i class="fas fa-history"></i>
+                    <span>Backup History</span>
+                </a>
+            </li>
+            <li class="sidebar-item">
+                <a href="reports.html" class="sidebar-link">
+                    <i class="fas fa-chart-bar"></i>
+                    <span>Reports</span>
+                </a>
+            </li>
+            <li class="sidebar-item">
+                <a href="notifications.html" class="sidebar-link">
+                    <i class="fas fa-bell"></i>
+                    <span>Notifications</span>
+                </a>
+            </li>
+            <li class="sidebar-item">
+                <a href="settings.html" class="sidebar-link">
+                    <i class="fas fa-sliders-h"></i>
+                    <span>Settings</span>
+                </a>
+            </li>
+            <li class="sidebar-item mt-4 border-top border-light border-opacity-10 pt-3">
+                <a href="login.html" class="sidebar-link text-danger-hover">
+                    <i class="fas fa-sign-out-alt"></i>
+                    <span>Logout</span>
+                </a>
+            </li>
+        </ul>
+    </aside>
+
+    <!-- Main Content Wrapper -->
+    <main class="main-wrapper page-transition">
+        <div class="mb-4">
+            <h4 class="mb-1 fw-bold text-primary"><i class="fas fa-play-circle me-2"></i>Execute Instant Database Backup</h4>
+            <p class="text-muted mb-0" style="font-size: 0.88rem;">Trigger manual snapshot dumps bypasses configured cron intervals under high operational authority.</p>
+        </div>
+
+        <div class="row">
+            <!-- Parameters configuration panel -->
+            <div class="col-12 col-xl-6">
+                <div class="custom-card" id="form-card-container">
+                    <div class="card-title-bar">
+                        <h5><i class="fas fa-sliders-h text-primary"></i>Operational Parameters</h5>
+                        <span class="badge bg-danger font-monospace"><i class="fas fa-exclamation-triangle me-1"></i>System Bypass Active</span>
+                    </div>
+
+                    <form id="instantBackupForm">
+                        <div class="row g-3">
+                            <!-- Select Instance -->
+                            <div class="col-12">
+                                <label for="bkpInstance" class="form-label fw-semibold text-secondary small">Database Target Instance</label>
+                                <select class="form-select" id="bkpInstance" required>
+                                    <!-- Dynamic population -->
+                                </select>
+                            </div>
+
+                            <!-- RDBMS Type -->
+                            <div class="col-12 col-md-6">
+                                <label for="bkpType" class="form-label fw-semibold text-secondary small">RDBMS Engine</label>
+                                <input type="text" class="form-control bg-light font-monospace" id="bkpType" readonly placeholder="Auto-filled...">
+                            </div>
+
+                            <!-- Destination -->
+                            <div class="col-12 col-md-6">
+                                <label for="bkpLocation" class="form-label fw-semibold text-secondary small">Backup Destination</label>
+                                <input type="text" class="form-control bg-light font-monospace" id="bkpLocation" readonly placeholder="Auto-filled...">
+                            </div>
+
+                            <!-- Operator Note -->
+                            <div class="col-12">
+                                <label for="bkpRemark" class="form-label fw-semibold text-secondary small">Manual Execution Note / Remark</label>
+                                <textarea class="form-control" id="bkpRemark" rows="3" placeholder="e.g. Manual emergency cold snapshot before major update..." required></textarea>
+                            </div>
+
+                            <div class="col-12 border-top pt-4 mt-4 d-flex justify-content-end gap-2">
+                                <button type="button" class="btn btn-outline-secondary" onclick="window.location.href='instances.html'">Cancel Run</button>
+                                <button type="submit" class="btn btn-maroon px-4 fw-bold"><i class="fas fa-rocket me-1"></i> Start Backup Execution</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+
+                <!-- Complete success diagnostics view (initially hidden) -->
+                <div class="custom-card border-success border-opacity-25" id="success-card-container" style="display: none;">
+                    <div class="card-title-bar">
+                        <h5 class="text-success"><i class="fas fa-check-circle text-success"></i>Backup Run Completed Successfully</h5>
+                        <span class="badge bg-success font-monospace">100% SUCCESS</span>
+                    </div>
+
+                    <div class="table-responsive mb-4">
+                        <table class="table table-bordered mb-0 align-middle">
+                            <tbody>
+                                <tr>
+                                    <td class="fw-bold bg-light text-secondary" style="width: 40%; font-size: 0.85rem;">File Package Name</td>
+                                    <td class="font-monospace fw-bold text-dark" id="res-filename">UTS_backup.tar.gz</td>
+                                </tr>
+                                <tr>
+                                    <td class="fw-bold bg-light text-secondary" style="font-size: 0.85rem;">Absolute Directory Destination</td>
+                                    <td><code class="text-secondary font-monospace" id="res-location">D:/DatabaseBackup/</code></td>
+                                </tr>
+                                <tr>
+                                    <td class="fw-bold bg-light text-secondary" style="font-size: 0.85rem;">Operational Duration</td>
+                                    <td class="font-monospace fw-semibold" id="res-duration">12 seconds</td>
+                                </tr>
+                                <tr>
+                                    <td class="fw-bold bg-light text-secondary" style="font-size: 0.85rem;">Archive File Size</td>
+                                    <td class="font-monospace fw-semibold" id="res-size">45.8 GB</td>
+                                </tr>
+                                <tr>
+                                    <td class="fw-bold bg-light text-secondary" style="font-size: 0.85rem;">SHA-256 Verification Hash</td>
+                                    <td><code class="text-muted font-monospace" style="font-size: 0.7rem; word-break: break-all;" id="res-hash">d41d8cd98f00b204e9800998ecf8427e123...</code></td>
+                                </tr>
+                                <tr>
+                                    <td class="fw-bold bg-light text-secondary" style="font-size: 0.85rem;">Operator's Notes</td>
+                                    <td class="text-secondary italic" id="res-remark">Emergency dump run before migration.</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <div class="d-flex gap-2 justify-content-end">
+                        <a href="backup-history.html" class="btn btn-outline-primary btn-sm px-3"><i class="fas fa-file-invoice me-1"></i> View History Tables</a>
+                        <button onclick="location.reload();" class="btn btn-maroon btn-sm px-3"><i class="fas fa-redo me-1"></i> Trigger New Job</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Execution Logs Simulation Console -->
+            <div class="col-12 col-xl-6 mt-4 mt-xl-0">
+                <div class="custom-card h-100">
+                    <div class="card-title-bar">
+                        <h5><i class="fas fa-terminal text-primary"></i>Operational Execution Shell</h5>
+                        <span class="badge bg-dark text-success font-monospace" id="terminal-status"><i class="fas fa-circle-notch me-1 text-secondary"></i>STANDBY</span>
+                    </div>
+
+                    <!-- Progress state indicators -->
+                    <div class="mb-3" id="progress-container" style="display: none;">
+                        <div class="d-flex justify-content-between mb-1">
+                            <span class="small fw-semibold text-secondary" id="progress-text">Connecting server host...</span>
+                            <span class="small fw-bold font-monospace" id="progress-percent">0%</span>
+                        </div>
+                        <div class="progress" style="height: 10px;">
+                            <div class="progress-bar progress-bar-striped progress-bar-animated bg-success" id="progress-bar-inner" role="progressbar" style="width: 0%"></div>
+                        </div>
+                    </div>
+
+                    <!-- Terminal Output Console -->
+                    <div class="console-box h-100" id="console-logs" style="min-height: 380px;">
+                        <span class="text-secondary">[STANDBY] Waiting for execution payload from controller operator...</span><br>
+                        <span class="console-cursor"></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer Component -->
+    <footer>
+        <div class="container-fluid px-4">
+            <div class="row align-items-center">
+                <div class="col-md-6 text-center text-md-start">
+                    <h6 class="mb-1 text-white fw-bold">Database Backup Monitoring System &copy; 2026</h6>
+                    <p class="mb-0 text-white-50" style="font-size: 0.75rem;">Designed & Optimized for Government Enterprise Infrastructure Management</p>
+                </div>
+                <div class="col-md-6 text-center text-md-end mt-3 mt-md-0">
+                    <span class="badge bg-secondary py-2 px-3 me-2">Version 1.0</span>
+                    <span class="badge bg-dark py-2 px-3 text-warning font-monospace"><i class="fas fa-shield-alt me-1"></i>NIC Standard Level-4 Sec</span>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Bootstrap Bundle JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- Core Application Logic -->
+    <script src="../js/app.js"></script>
+
+    <script>
+        const loggedUser = localStorage.getItem("loggedUser");
+
+if (!loggedUser) {
+    alert("Please login first");
+    window.location.href = "login.html";
+}
+        document.addEventListener("DOMContentLoaded", async () => {
+            const selectInst = document.getElementById("bkpInstance");
+            const txtType = document.getElementById("bkpType");
+            const txtLoc = document.getElementById("bkpLocation");
+            const form = document.getElementById("instantBackupForm");
+            
+            // Read target instance ID from query parameters
+            const urlParams = new URLSearchParams(window.location.search);
+            const targetId = urlParams.get('id');
+
+            // Populate Instances select from backend
+            const instances = await getInstancesFromServer();
+            selectInst.innerHTML = `<option value="" disabled ${!targetId ? 'selected' : ''}>Choose target database...</option>`;
+            
+            instances.forEach(ins => {
+                const isSelected = ins.id === targetId ? "selected" : "";
+                selectInst.innerHTML += `<option value="${ins.id}" ${isSelected}>${ins.name}</option>`;
+            });
+
+            // Auto fill specs on initial load
+            if (targetId) {
+                const activeIns = instances.find(i => i.id === targetId);
+                if (activeIns) {
+                    txtType.value = activeIns.type;
+                    txtLoc.value = activeIns.backupLocation;
+                }
+            }
+
+            // Sync with selection change
+            selectInst.addEventListener("change", () => {
+                const selectedId = selectInst.value;
+                const activeIns = instances.find(i => i.id === selectedId);
+                if (activeIns) {
+                    txtType.value = activeIns.type;
+                    txtLoc.value = activeIns.backupLocation;
+                }
+            });
+
+            // Form Submit and simulation
+            form.addEventListener("submit", (e) => {
+                e.preventDefault();
+
+                const targetInsId = selectInst.value;
+                const activeIns = instances.find(i => i.id === targetInsId);
+                if (!activeIns) return;
+
+                if (activeIns.type !== "MySQL") {
+                    showToast(
+                        "Error",
+                        "Remote backup currently supports MySQL only",
+                        "danger"
+                    );
+                    return;
+                }
+
+                const remark = document.getElementById("bkpRemark").value;
+
+                // Disable forms
+                document.getElementById("form-card-container").style.pointerEvents = "none";
+                document.getElementById("form-card-container").style.opacity = "0.7";
+
+                // Initialize Progress State
+                const progressBox = document.getElementById("progress-container");
+                const progressText = document.getElementById("progress-text");
+                const progressPercent = document.getElementById("progress-percent");
+                const progressBar = document.getElementById("progress-bar-inner");
+                const terminalStatus = document.getElementById("terminal-status");
+                const consoleLogs = document.getElementById("console-logs");
+
+                progressBox.style.display = "block";
+                terminalStatus.innerHTML = `<i class="fas fa-spinner fa-spin me-1 text-success"></i>RUNNING`;
+                terminalStatus.className = "badge bg-dark text-success font-monospace";
+                consoleLogs.innerHTML = "";
+
+                // Console logging payload events array
+                const timestamp = () => new Date().toLocaleTimeString();
+                
+                const steps = [
+                    { pct: 10, txt: "Initiating remote handshake...", log: `[INFO] ${timestamp()} Establishing connection handshake with host: ${activeIns.ip}:${activeIns.port}` },
+                    { pct: 25, txt: "Validating SSL certificate...", log: `[INFO] ${timestamp()} TLS connection established. SSL Certificate authenticated.` },
+                    { pct: 40, txt: "Locking schema tables...", log: `[INFO] ${timestamp()} Executing backup snapshot lock on active table spaces.` },
+                    { pct: 60, txt: "Dumping data rows...", log: `[INFO] ${timestamp()} Dumping database schema rows, views, and functions...` },
+                    { pct: 75, txt: "Archiving file compression...", log: `[INFO] ${timestamp()} Archiving complete. Compressing stream using gzip algorithm.` },
+                    { pct: 90, txt: "Writing payload archive file...", log: `[INFO] ${timestamp()} Syncing completed file target: ${activeIns.backupLocation}` }
+                ];
+
+                let currentStep = 0;
+                let apiData = null;
+                let apiError = null;
+                let intervalFinished = false;
+                let apiFinished = false;
+
+                const dbInstanceId = parseInt(activeIns.id);
+                console.log("Initiating live backend backup for database ID:", dbInstanceId);
+
+                // Call the real-backup API in parallel with the progress animation
+                fetch("http://127.0.0.1:5000/api/backups/real-backup", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify({
+                        instance_id: dbInstanceId
+                    })
+                })
+                .then(response => {
+                    if (!response.ok) {
+                        return response.json().then(json => {
+                            throw new Error(json.message || "Backup failed on server");
+                        }).catch(() => {
+                            throw new Error("HTTP error " + response.status);
+                        });
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    console.log("Real backup response:", data);
+                    apiData = data;
+                    apiFinished = true;
+                    checkCompletion();
+                })
+                .catch(error => {
+                    console.error("Backup error:", error);
+                    apiError = error;
+                    apiFinished = true;
+                    checkCompletion();
+                });
+
+                const interval = setInterval(() => {
+                    if (currentStep < steps.length) {
+                        const step = steps[currentStep];
+                        progressBar.style.width = `${step.pct}%`;
+                        progressPercent.textContent = `${step.pct}%`;
+                        progressText.textContent = step.txt;
+
+                        consoleLogs.innerHTML += `<span>${step.log}</span><br>`;
+                        consoleLogs.scrollTop = consoleLogs.scrollHeight;
+
+                        currentStep++;
+                    } else {
+                        clearInterval(interval);
+                        intervalFinished = true;
+                        checkCompletion();
+                    }
+                }, 700);
+
+                function checkCompletion() {
+                    if (intervalFinished && apiFinished) {
+                        if (apiError) {
+                            terminalStatus.innerHTML = `<i class="fas fa-times me-1 text-danger"></i>FAILED`;
+                            terminalStatus.className = "badge bg-dark text-danger font-monospace";
+                            consoleLogs.innerHTML += `<span class="text-danger">[ERROR] ${timestamp()} Backup execution failed: ${apiError.message || "Internal Server Error"}</span><br>`;
+                            consoleLogs.scrollTop = consoleLogs.scrollHeight;
+                            
+                            showToast("Backup Failed", apiError.message || "Failed to create database backup snapshot.", "danger");
+                            
+                            // Re-enable form
+                            document.getElementById("form-card-container").style.pointerEvents = "auto";
+                            document.getElementById("form-card-container").style.opacity = "1";
+                            return;
+                        }
+
+                        // Success!
+                        progressBar.style.width = "100%";
+                        progressPercent.textContent = "100%";
+                        progressText.textContent = "Success! Handshake closed.";
+                        consoleLogs.innerHTML += `<span>[SUCCESS] ${timestamp()} Master validation complete. Integrity hash validated successfully!</span><br>`;
+                        consoleLogs.scrollTop = consoleLogs.scrollHeight;
+
+                        setTimeout(() => {
+                            terminalStatus.innerHTML = `<i class="fas fa-check me-1 text-success"></i>COMPLETED`;
+                            progressBox.style.display = "none";
+                            
+                            // Show completion metadata sheet
+                            document.getElementById("form-card-container").style.display = "none";
+                            const successCard = document.getElementById("success-card-container");
+                            successCard.style.display = "block";
+
+                            document.getElementById("res-filename").textContent = apiData.fileName;
+                            document.getElementById("res-location").textContent = apiData.backupPath;
+                            document.getElementById("res-duration").textContent = apiData.duration;
+                            document.getElementById("res-size").textContent = apiData.backupSize;
+                            document.getElementById("res-hash").textContent = apiData.fileHash;
+                            document.getElementById("res-remark").textContent = remark || "N/A";
+
+                            showToast("Manual Backup Accomplished", `Instance '${activeIns.name}' snapshot compiled successfully. Size: ${apiData.backupSize}`, "success");
+                        }, 500);
+                    }
+                }
+            });
+        });
+        const logoutBtn = document.getElementById("logoutBtn");
+
+if (logoutBtn) {
+    logoutBtn.addEventListener("click", () => {
+        localStorage.removeItem("loggedUser");
+        window.location.href = "login.html";
+    });
+}
+    </script>
+</body>
+</html>

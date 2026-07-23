@@ -1,0 +1,655 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - Database Backup Monitoring System</title>
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome Icons -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+    <!-- Custom Style Sheet -->
+    <link href="../css/style.css" rel="stylesheet">
+</head>
+<body>
+    <!-- Topbar Navigation -->
+    <nav class="topbar">
+        <a href="dashboard.html" class="topbar-brand">
+            <div class="d-inline-flex align-items-center justify-content-center bg-white" style="width: 36px; height: 36px; border-radius: 6px;">
+                <i class="fas fa-train text-primary" style="font-size: 1.25rem;"></i>
+            </div>
+            <span>Database Backup Monitoring System</span>
+        </a>
+        
+        <div class="topbar-actions">
+            <!-- Dark Mode Toggle Button -->
+            <div class="topbar-icon" id="theme-toggle-btn" title="Toggle Theme mode">
+                <i class="fas fa-moon text-light"></i>
+            </div>
+            
+            <!-- Notifications Bell -->
+            <a href="notifications.html" class="topbar-icon text-decoration-none" title="View active notifications">
+                <i class="fas fa-bell"></i>
+                <span class="badge rounded-pill bg-danger notification-count-badge">5</span>
+            </a>
+            
+            <!-- User Dropdown Menu -->
+            <div class="dropdown">
+                <div class="user-profile-btn" data-bs-toggle="dropdown" aria-expanded="false">
+                    <img
+    src="https://cdn-icons-png.flaticon.com/512/3135/3135715.png"
+    alt="User Image"
+    style="width:40px;height:40px;border-radius:50%;object-fit:cover;">
+                    <span class="d-none d-sm-inline">admin</span>
+                    <i class="fas fa-chevron-down ms-1" style="font-size: 0.75rem;"></i>
+                </div>
+                <ul class="dropdown-menu dropdown-menu-end shadow-sm border-0 mt-2">
+                    <li><a class="dropdown-item" href="settings.html"><i class="fas fa-user-cog me-2 text-secondary"></i>My Profile</a></li>
+                    <li><a class="dropdown-item" href="settings.html"><i class="fas fa-cog me-2 text-secondary"></i>System Settings</a></li>
+                    <li><hr class="dropdown-divider"></li>
+                    <li> <a class="dropdown-item text-danger" href="#" id="logoutBtn"><i class="fas fa-sign-out-alt me-2"></i>Sign Out</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Sidebar Collapsible Navigation -->
+    <aside class="sidebar">
+       <div class="sidebar-section-title">
+    Main Control
+</div>
+        <ul class="sidebar-menu">
+            <li class="sidebar-item active">
+                <a href="dashboard.html" class="sidebar-link">
+                    <i class="fas fa-tachometer-alt"></i>
+                    <span>Dashboard</span>
+                </a>
+            </li>
+            <li class="sidebar-item">
+                <a href="instances.html" class="sidebar-link">
+                    <i class="fas fa-server"></i>
+                    <span>Instances</span>
+                </a>
+            </li>
+            <li class="sidebar-item">
+                <a href="add-instance.html" class="sidebar-link">
+                    <i class="fas fa-plus-circle"></i>
+                    <span>Add New Instance</span>
+                </a>
+            </li>
+            <li class="sidebar-item">
+                <a href="configure-backup.html" class="sidebar-link">
+                    <i class="fas fa-calendar-alt"></i>
+                    <span>Configure Backup</span>
+                </a>
+            </li>
+            <li class="sidebar-item">
+                <a href="backup-now.html" class="sidebar-link">
+                    <i class="fas fa-play-circle"></i>
+                    <span>Backup Now</span>
+                </a>
+            </li>
+            <li class="sidebar-item">
+                <a href="backup-history.html" class="sidebar-link">
+                    <i class="fas fa-history"></i>
+                    <span>Backup History</span>
+                </a>
+            </li>
+            <li class="sidebar-item">
+                <a href="reports.html" class="sidebar-link">
+                    <i class="fas fa-chart-bar"></i>
+                    <span>Reports</span>
+                </a>
+            </li>
+            <li class="sidebar-item">
+                <a href="notifications.html" class="sidebar-link">
+                    <i class="fas fa-bell"></i>
+                    <span>Notifications</span>
+                </a>
+            </li>
+            <li class="sidebar-item">
+                <a href="settings.html" class="sidebar-link">
+                    <i class="fas fa-sliders-h"></i>
+                    <span>Settings</span>
+                </a>
+            </li>
+            <li class="sidebar-item mt-4 border-top border-light border-opacity-10 pt-3">
+                <a href="login.html" class="sidebar-link text-danger-hover">
+                    <i class="fas fa-sign-out-alt"></i>
+                    <span>Logout</span>
+                </a>
+            </li>
+        </ul>
+    </aside>
+
+    <!-- Main Content Wrapper -->
+    <main class="main-wrapper page-transition">
+        <!-- Control Room Alert Ticker -->
+        <!-- <div class="ticker-wrap mb-4">
+            <span class="ticker-title"><i class="fas fa-exclamation-triangle me-1"></i>System Alert Ticker</span>
+            <div class="ticker-text font-monospace text-uppercase" style="width: 100%; display: inline-block;">
+                CRITICAL WARNING: Database instance 'FOIS Freight Server' (10.182.5.12) is unreachable since 29-05-2026 09:00 PM. High priority network team (RailTel Route 4) notified. | STORAGE WARNING: COA Control Office DB Backup disk volume has exceeded 85% utilization threshold. Autoclear scheduled.
+            </div>
+        </div> -->
+
+        <div class="d-flex align-items-center justify-content-between mb-4 flex-wrap gap-2">
+            <div>
+                <h4 class="mb-1 fw-bold text-primary"><i class="fas fa-chalkboard me-2"></i>Infrastructure Dashboard Overview</h4>
+                <p class="text-muted mb-0" style="font-size: 0.88rem;">Real-time health telemetry from CRIS national database infrastructure.</p>
+            </div>
+            <div class="d-flex align-items-center gap-2">
+                <button class="btn btn-outline-primary btn-sm" onclick="location.reload();">
+                    <i class="fas fa-sync-alt me-1"></i> Refresh Telemetry
+                </button>
+                <a href="add-instance.html" class="btn btn-maroon btn-sm">
+                    <i class="fas fa-plus me-1"></i> Register Server
+                </a>
+            </div>
+        </div>
+
+        <!-- Skeleton Loading Container -->
+        <div id="skeleton-loader-grid" class="row g-4 mb-4">
+            <div class="col-6 col-lg-3"><div class="custom-card"><div class="skeleton-box mb-2" style="height: 35px;"></div><div class="skeleton-box" style="height: 15px;"></div></div></div>
+            <div class="col-6 col-lg-3"><div class="custom-card"><div class="skeleton-box mb-2" style="height: 35px;"></div><div class="skeleton-box" style="height: 15px;"></div></div></div>
+            <div class="col-6 col-lg-3"><div class="custom-card"><div class="skeleton-box mb-2" style="height: 35px;"></div><div class="skeleton-box" style="height: 15px;"></div></div></div>
+            <div class="col-6 col-lg-3"><div class="custom-card"><div class="skeleton-box mb-2" style="height: 35px;"></div><div class="skeleton-box" style="height: 15px;"></div></div></div>
+        </div>
+
+        <!-- Real Telemetry KPI Grid (initially hidden, shown by script) -->
+        <div id="real-telemetry-grid" class="row g-4 mb-4" style="display: none;">
+            <div class="col-12 col-sm-6 col-lg-4 col-xl-2">
+                <a href="instances.html" class="text-decoration-none d-block h-100">
+                    <div class="kpi-card kpi-blue h-100">
+                        <div class="kpi-icon-container">
+                            <i class="fas fa-database"></i>
+                        </div>
+                        <div class="kpi-title">Total Instances</div>
+                        <div class="kpi-value" id="kpi-total">5</div>
+                        <span class="badge bg-secondary py-1 font-monospace" style="font-size: 0.7rem;">Active Nodes</span>
+                    </div>
+                </a>
+            </div>
+            
+            <div class="col-12 col-sm-6 col-lg-4 col-xl-2">
+                <a href="instances.html?status=Connected" class="text-decoration-none d-block h-100">
+                    <div class="kpi-card kpi-green h-100">
+                        <div class="kpi-icon-container">
+                            <i class="fas fa-check-circle"></i>
+                        </div>
+                        <div class="kpi-title">Connected</div>
+                        <div class="kpi-value text-success" id="kpi-connected">3</div>
+                        <span class="badge bg-success-subtle text-success py-1 font-monospace" style="font-size: 0.7rem;">99.2% Health</span>
+                    </div>
+                </a>
+            </div>
+            
+            <div class="col-12 col-sm-6 col-lg-4 col-xl-2">
+                <a href="instances.html?status=Disconnected" class="text-decoration-none d-block h-100">
+                    <div class="kpi-card kpi-red h-100">
+                        <div class="kpi-icon-container">
+                            <i class="fas fa-times-circle"></i>
+                        </div>
+                        <div class="kpi-title">Failed</div>
+                        <div class="kpi-value text-danger" id="kpi-failed">1</div>
+                        <span class="badge bg-danger-subtle text-danger py-1 font-monospace" style="font-size: 0.7rem;">Requires Action</span>
+                    </div>
+                </a>
+            </div>
+
+            <div class="col-12 col-sm-6 col-lg-4 col-xl-2">
+                <a href="backup-history.html" class="text-decoration-none d-block h-100">
+                    <div class="kpi-card kpi-grey h-100">
+                        <div class="kpi-icon-container">
+                            <i class="fas fa-hdd"></i>
+                        </div>
+                        <div class="kpi-title">Today's Backups</div>
+                        <div class="kpi-value" id="kpi-todays">0</div>
+                        <span class="badge bg-secondary-subtle text-secondary py-1 font-monospace"
+                              id="backup-size"
+                              style="font-size:0.7rem;">
+                        0.00 GB today
+                        </span>
+                    </div>
+                </a>
+            </div>
+
+            <div class="col-12 col-sm-6 col-lg-4 col-xl-2">
+                <a href="configure-backup.html" class="text-decoration-none d-block h-100">
+                    <div class="kpi-card kpi-maroon h-100">
+                        <div class="kpi-icon-container">
+                            <i class="fas fa-clock"></i>
+                        </div>
+                        <div class="kpi-title">Scheduled</div>
+                        <div class="kpi-value text-maroon" id="kpi-scheduled">0</div>
+                        <span class="badge bg-danger-subtle text-maroon py-1 font-monospace"
+                              id="schedule-cycle"
+                              style="font-size:0.7rem;">
+                        No Schedule
+                        </span>
+                    </div>
+                </a>
+            </div>
+
+            <div class="col-12 col-sm-6 col-lg-4 col-xl-2">
+                <a href="backup-now.html" class="text-decoration-none d-block h-100">
+                    <div class="kpi-card kpi-amber h-100">
+                        <div class="kpi-icon-container">
+                            <i class="fas fa-exclamation-triangle"></i>
+                        </div>
+                        <div class="kpi-title">Failed Backups</div>
+                        <div class="kpi-value text-warning" id="kpi-failedbk">0</div>
+                        <span class="badge bg-warning-subtle text-warning py-1 font-monospace" id="failedbk-badge" style="font-size: 0.7rem;">No Failures</span>
+                    </div>
+                </a>
+            </div>
+        </div>
+
+        <!-- Telemetry Charts & Alerts -->
+        <div class="row mb-4">
+            <!-- Primary Success Chart -->
+            <div class="col-12 col-xl-8">
+                <div class="custom-card h-100">
+                    <div class="card-title-bar">
+                        <h5><i class="fas fa-chart-line text-primary"></i>Backup Execution Metrics (24-Hour Success Ratio)</h5>
+                        <div class="btn-group btn-group-sm">
+                            <button class="btn btn-outline-secondary active btn-sm">Success Rate</button>
+                            <button class="btn btn-outline-secondary btn-sm" onclick="window.location.href='reports.html';">Detailed Trends</button>
+                        </div>
+                    </div>
+                    <div style="position: relative; height: 320px;">
+                        <canvas id="successRateChart"></canvas>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Distribution Chart -->
+            <div class="col-12 col-xl-4 mt-4 mt-xl-0">
+                <div class="custom-card h-100">
+                    <div class="card-title-bar">
+                        <h5><i class="fas fa-chart-pie text-maroon"></i>RDBMS Distribution</h5>
+                    </div>
+                    <div style="position: relative; height: 260px;" class="d-flex align-items-center justify-content-center">
+                        <canvas id="dbDistributionChart" style="max-height: 100%;"></canvas>
+                    </div>
+                    <div class="text-center mt-3 font-monospace text-muted" style="font-size: 0.8rem;">
+                        Oracle (3 Nodes) | MySQL (2 Nodes)
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <!-- Left: Critical Active Incidents -->
+            <div class="col-12 col-lg-5">
+                <div class="custom-card h-100">
+                    <div class="card-title-bar">
+                        <h5><i class="fas fa-shield-alt text-danger"></i>System Health Feed</h5>
+                        <span class="badge bg-success py-1" id="health-alerts-badge">0 Alerts Active</span>
+                    </div>
+                    
+                    <div class="d-flex flex-column gap-3" id="health-feed-container">
+                        <div class="text-center py-4">
+                            <div class="spinner-border spinner-border-sm text-primary me-2"></div>
+                            Synchronizing health feed...
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right: Recent Operational History -->
+            <div class="col-12 col-lg-7 mt-4 mt-lg-0">
+                <div class="custom-card h-100">
+                    <div class="card-title-bar">
+                        <h5><i class="fas fa-file-invoice text-primary"></i>Recent Backups Run Log</h5>
+                        <a href="backup-history.html" class="btn btn-outline-primary btn-sm">Full History</a>
+                    </div>
+                    
+                    <div class="table-responsive">
+                        <table class="table table-hover custom-table align-middle">
+                            <thead>
+                                <tr>
+                                    <th>Instance Name</th>
+                                    <th>RDBMS</th>
+                                    <th>Duration</th>
+                                    <th>File Size</th>
+                                    <th>Status</th>
+                                </tr>
+                            </thead>
+                            <tbody id="recent-backups-tbody">
+                                <tr>
+                                    <td colspan="5" class="text-center py-4">
+                                        <div class="spinner-border spinner-border-sm text-primary me-2"></div>
+                                        Synchronizing operational registry...
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer Component -->
+    <footer>
+        <div class="container-fluid px-4">
+            <div class="row align-items-center">
+                <div class="col-md-6 text-center text-md-start">
+                    <h6 class="mb-1 text-white fw-bold">Database Backup Monitoring System &copy; 2026</h6>
+                    <p class="mb-0 text-white-50" style="font-size: 0.75rem;">Designed & Optimized for Government Enterprise Infrastructure Management</p>
+                </div>
+                <div class="col-md-6 text-center text-md-end mt-3 mt-md-0">
+                    <span class="badge bg-secondary py-2 px-3 me-2">Version 1.0</span>
+                    <span class="badge bg-dark py-2 px-3 text-warning font-monospace"><i class="fas fa-shield-alt me-1"></i>NIC Standard Level-4 Sec</span>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Bootstrap Bundle JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- Core Application Logic -->
+    <script src="../js/app.js"></script>
+
+    <script>
+        const loggedUser =
+    localStorage.getItem("loggedUser");
+
+if (!loggedUser) {
+
+    alert("Please login first");
+
+    window.location.href =
+        "login.html";
+}
+        document.addEventListener("DOMContentLoaded", () => {
+            // Simulated Skeleton loader duration
+            setTimeout(() => {
+                const skGrid = document.getElementById("skeleton-loader-grid");
+                const realGrid = document.getElementById("real-telemetry-grid");
+
+                if (skGrid) skGrid.style.display = "none";
+                if (realGrid) realGrid.style.display = "";
+
+                try {
+                    renderKPIDashboard();
+                } catch (err) {
+                    console.error("Dashboard KPI render failed:", err);
+                }
+
+                try {
+                    if (typeof Chart !== "undefined") {
+                        initDashboardCharts();
+                    }
+                } catch (err) {
+                    console.error("Dashboard charts failed:", err);
+                }
+
+                // Load recent backups table from live backend
+                loadRecentBackups();
+
+                // Render dynamic system health feed
+                renderHealthFeed();
+            }, 800);
+        });
+
+async function renderKPIDashboard() {
+
+    try {
+
+        const response = await fetch("http://127.0.0.1:5000/api/dashboard");
+        const dashboardData = await response.json();
+
+        document.getElementById("kpi-total").textContent =
+            dashboardData.totalInstances || 0;
+
+        document.getElementById("kpi-connected").textContent =
+            dashboardData.connectedInstances || 0;
+
+        document.getElementById("kpi-failed").textContent =
+            dashboardData.disconnectedInstances || 0;
+
+        document.getElementById("kpi-failedbk").textContent =
+            dashboardData.failedBackups || 0;
+
+        const failedbkBadge = document.getElementById("failedbk-badge");
+        if (failedbkBadge) {
+            failedbkBadge.textContent = dashboardData.failedBackups > 0
+                ? `${dashboardData.failedBackups} Failures`
+                : "No Failures";
+        }
+
+        document.getElementById("kpi-todays").textContent =
+            dashboardData.todayBackups || 0;
+
+        const activeSchedulesCount = dashboardData.scheduledBackups || 0;
+        document.getElementById("kpi-scheduled").textContent = activeSchedulesCount;
+
+        document.getElementById("backup-size").textContent =
+            `${(dashboardData.totalBackupSize || 0).toFixed(2)} GB today`;
+
+        const scheduleCycle = document.getElementById("schedule-cycle");
+        if (scheduleCycle) {
+            if (activeSchedulesCount > 0) {
+                scheduleCycle.textContent = dashboardData.scheduledFrequencies || "Active";
+                scheduleCycle.className = "badge bg-success-subtle text-success py-1 font-monospace";
+            } else {
+                scheduleCycle.textContent = "No Schedule";
+                scheduleCycle.className = "badge bg-danger-subtle text-maroon py-1 font-monospace";
+            }
+        }
+
+    } catch (error) {
+
+        console.error(error);
+
+        document.getElementById("kpi-total").textContent = 0;
+        document.getElementById("kpi-connected").textContent = 0;
+        document.getElementById("kpi-failed").textContent = 0;
+        document.getElementById("kpi-failedbk").textContent = 0;
+        document.getElementById("kpi-todays").textContent = 0;
+        document.getElementById("kpi-scheduled").textContent = 0;
+        document.getElementById("backup-size").textContent = "0.00 GB today";
+        const scheduleCycle = document.getElementById("schedule-cycle");
+        if (scheduleCycle) {
+            scheduleCycle.textContent = "No Schedule";
+            scheduleCycle.className = "badge bg-danger-subtle text-maroon py-1 font-monospace";
+        }
+    }
+}
+
+
+        async function initDashboardCharts() {
+            // Fetch live chart data from backend
+            let chartData = null;
+            try {
+                const r = await fetch("http://127.0.0.1:5000/api/dashboard/charts");
+                chartData = await r.json();
+            } catch (e) {
+                console.error("Chart data fetch failed:", e);
+            }
+
+            const colors = {
+                blue:    '#003366',
+                maroon:  '#8B0000',
+                green:   '#198754',
+                grey:    'rgba(108,117,125,0.15)',
+                blueAlpha:   'rgba(0,51,102,0.08)',
+                maroonAlpha: 'rgba(139,0,0,0.08)'
+            };
+
+            // ---------- Chart 1: Backup Success Rate Line ----------
+            const daily = chartData && chartData.dailyTrend;
+            const lineLabels  = daily ? daily.labels  : ['Mon','Tue','Wed','Thu','Fri','Sat','Sun'];
+            const lineSuccess = daily ? daily.success : [null,null,null,null,null,null,null];
+            const lineFailed  = daily ? daily.failed  : [null,null,null,null,null,null,null];
+
+            const ctx1 = document.getElementById('successRateChart').getContext('2d');
+            new Chart(ctx1, {
+                type: 'line',
+                data: {
+                    labels: lineLabels,
+                    datasets: [{
+                        label: 'Success Rate (%)',
+                        data: lineSuccess,
+                        borderColor: colors.blue,
+                        backgroundColor: colors.blueAlpha,
+                        fill: true, tension: 0.3, borderWidth: 3,
+                        spanGaps: true
+                    }, {
+                        label: 'Failure Rate (%)',
+                        data: lineFailed,
+                        borderColor: colors.maroon,
+                        backgroundColor: colors.maroonAlpha,
+                        fill: true, tension: 0.3, borderWidth: 2,
+                        spanGaps: true
+                    }]
+                },
+                options: {
+                    responsive: true, maintainAspectRatio: false,
+                    scales: {
+                        y: { beginAtZero: true, max: 100,
+                             ticks: { callback: v => v + '%' } }
+                    },
+                    plugins: { legend: { position: 'top' } }
+                }
+            });
+
+            // ---------- Chart 2: RDBMS Distribution Doughnut ----------
+            const dist   = chartData && chartData.dbDistribution;
+            const dLabels = dist ? dist.labels : ['Oracle','MySQL'];
+            const dValues = dist ? dist.values : [0, 0];
+
+            const ctx2 = document.getElementById('dbDistributionChart').getContext('2d');
+            new Chart(ctx2, {
+                type: 'doughnut',
+                data: {
+                    labels: dLabels,
+                    datasets: [{ data: dValues,
+                        backgroundColor: [colors.blue, colors.maroon],
+                        hoverOffset: 4 }]
+                },
+                options: {
+                    responsive: true, maintainAspectRatio: false,
+                    plugins: { legend: { position: 'bottom' } }
+                }
+            });
+
+            // Update the sub-label below the doughnut
+            const distLabel = document.querySelector('#dbDistributionChart').closest('.custom-card').querySelector('.text-center.mt-3');
+            if (distLabel && dist) {
+                distLabel.textContent = dLabels.map((l, i) => `${l} (${dValues[i]} Nodes)`).join(' | ');
+            }
+        }
+
+        // Populate the recent backups table from live API data
+        async function loadRecentBackups() {
+            const tbody = document.getElementById("recent-backups-tbody");
+            try {
+                const r    = await fetch("http://127.0.0.1:5000/api/dashboard");
+                const data = await r.json();
+                const rows = data.recentBackups || [];
+
+                if (rows.length === 0) {
+                    tbody.innerHTML = `<tr><td colspan="5" class="text-center py-4 text-muted"><i class="fas fa-folder-open me-1"></i> No backup records found.</td></tr>`;
+                    return;
+                }
+                tbody.innerHTML = rows.map(b => {
+                    const badge  = b.status === 'Success' ? 'bg-success' : 'bg-danger';
+                    const dateStr = b.backup_date ? new Date(b.backup_date).toLocaleString('en-IN', { day:'2-digit', month:'short', hour:'2-digit', minute:'2-digit' }) : '—';
+                    return `<tr>
+                        <td class="fw-semibold">${b.instance_name || '—'}</td>
+                        <td><span class="badge bg-light text-dark border font-monospace">${b.db_type || '—'}</span></td>
+                        <td class="font-monospace">${b.duration || '—'}</td>
+                        <td class="font-monospace fw-semibold">${b.backup_size || '—'}</td>
+                        <td><span class="badge ${badge}">${b.status}</span></td>
+                    </tr>`;
+                }).join('');
+            } catch (e) {
+                console.error("Recent backups error:", e);
+                tbody.innerHTML = `<tr><td colspan="5" class="text-center py-3 text-danger"><i class="fas fa-exclamation-triangle me-1"></i>Failed to load backup log.</td></tr>`;
+            }
+        }
+
+        // Render dynamic system health feed based on actual instances statuses
+        async function renderHealthFeed() {
+            const feedContainer = document.getElementById("health-feed-container");
+            const alertsBadge = document.getElementById("health-alerts-badge");
+            if (!feedContainer) return;
+
+            try {
+                const response = await fetch("http://127.0.0.1:5000/api/instances");
+                const instances = await response.json();
+
+                const alerts = instances.filter(ins => ins.status === "Disconnected");
+                const warnings = instances.filter(ins => ins.status === "Warning");
+
+                const totalAlerts = alerts.length + warnings.length;
+                if (alertsBadge) {
+                    alertsBadge.textContent = `${totalAlerts} ${totalAlerts === 1 ? 'Alert' : 'Alerts'} Active`;
+                    alertsBadge.className = totalAlerts > 0 ? "badge bg-danger py-1" : "badge bg-success py-1";
+                }
+
+                let html = "";
+
+                if (totalAlerts === 0) {
+                    html = `
+                        <div class="p-3 border rounded border-success border-opacity-25 bg-success-subtle bg-opacity-10 d-flex gap-3 align-items-start">
+                            <div class="text-success mt-1"><i class="fas fa-check-circle fa-lg"></i></div>
+                            <div>
+                                <h6 class="fw-bold mb-1 text-success-emphasis" style="font-size: 0.9rem;">All Systems Operational</h6>
+                                <p class="text-muted mb-0" style="font-size: 0.8rem;">Automated security handshakes and listeners are active on all database nodes. Zero pings failed.</p>
+                            </div>
+                        </div>
+                    `;
+                } else {
+                    alerts.forEach(ins => {
+                        html += `
+                            <div class="p-3 border rounded border-danger border-opacity-25 bg-danger-subtle bg-opacity-10 d-flex gap-3 align-items-start">
+                                <div class="text-danger mt-1"><i class="fas fa-times-circle fa-lg"></i></div>
+                                <div>
+                                    <h6 class="fw-bold mb-1 text-danger" style="font-size: 0.9rem;">${ins.name} Down</h6>
+                                    <p class="text-muted mb-1" style="font-size: 0.8rem;">Timeout detected checking database connection at Port ${ins.port || '1521'}. Host IP ${ins.ip} is unreachable.</p>
+                                    <span class="badge bg-dark text-warning font-monospace text-uppercase" style="font-size: 0.65rem;">CRITICAL CONNECTION TIMEOUT</span>
+                                </div>
+                            </div>
+                        `;
+                    });
+
+                    warnings.forEach(ins => {
+                        html += `
+                            <div class="p-3 border rounded border-warning border-opacity-25 bg-warning-subtle bg-opacity-10 d-flex gap-3 align-items-start">
+                                <div class="text-warning mt-1"><i class="fas fa-exclamation-triangle fa-lg"></i></div>
+                                <div>
+                                    <h6 class="fw-bold mb-1 text-warning-emphasis" style="font-size: 0.9rem;">${ins.name} Disk Threshold</h6>
+                                    <p class="text-muted mb-1" style="font-size: 0.8rem;">Secondary storage partition reported high usage disk alerts or warnings at IP ${ins.ip}.</p>
+                                    <span class="badge bg-dark text-warning font-monospace text-uppercase" style="font-size: 0.65rem;">Active Warnings</span>
+                                </div>
+                            </div>
+                        `;
+                    });
+                }
+
+                feedContainer.innerHTML = html;
+            } catch (error) {
+                console.error("Health feed error:", error);
+                feedContainer.innerHTML = `<div class="text-danger p-3"><i class="fas fa-exclamation-triangle me-1"></i>Failed to load health feed.</div>`;
+            }
+        }
+
+        const logoutBtn = document.getElementById("logoutBtn");
+
+if (logoutBtn) {
+
+    logoutBtn.addEventListener("click", () => {
+
+        localStorage.removeItem("loggedUser");
+
+        window.location.href = "login.html";
+    });
+}
+    </script>
+</body>
+</html>

@@ -1,0 +1,565 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Backup History - Database Backup Monitoring System</title>
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome Icons -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <!-- Custom Style Sheet -->
+    <link href="../css/style.css" rel="stylesheet">
+</head>
+
+<body>
+    <!-- Topbar Navigation -->
+    <nav class="topbar">
+        <a href="dashboard.html" class="topbar-brand">
+            <div class="d-inline-flex align-items-center justify-content-center bg-white"
+                style="width: 36px; height: 36px; border-radius: 6px;">
+                <i class="fas fa-train text-primary" style="font-size: 1.25rem;"></i>
+            </div>
+            <span>Database Backup Monitoring System</span>
+        </a>
+
+        <div class="topbar-actions">
+            <div class="topbar-icon" id="theme-toggle-btn" title="Toggle Theme mode">
+                <i class="fas fa-moon text-light"></i>
+            </div>
+
+            <a href="notifications.html" class="topbar-icon text-decoration-none" title="View active notifications">
+                <i class="fas fa-bell"></i>
+                <span class="badge rounded-pill bg-danger notification-count-badge">5</span>
+            </a>
+
+            <div class="dropdown">
+                <div class="user-profile-btn" data-bs-toggle="dropdown" aria-expanded="false">
+                   <img
+    src="https://cdn-icons-png.flaticon.com/512/3135/3135715.png"
+    alt="User Image"
+    style="width:40px;height:40px;border-radius:50%;object-fit:cover;">
+                    <span class="d-none d-sm-inline">admin</span>
+                    <i class="fas fa-chevron-down ms-1" style="font-size: 0.75rem;"></i>
+                </div>
+                <ul class="dropdown-menu dropdown-menu-end shadow-sm border-0 mt-2">
+                    <li><a class="dropdown-item" href="settings.html"><i
+                                class="fas fa-user-cog me-2 text-secondary"></i>My Profile</a></li>
+                    <li><a class="dropdown-item" href="settings.html"><i
+                                class="fas fa-cog me-2 text-secondary"></i>System Settings</a></li>
+                    <li>
+                        <hr class="dropdown-divider">
+                    </li>
+                    <a class="dropdown-item text-danger"
+   href="#"
+   id="logoutBtn">
+    <i class="fas fa-sign-out-alt me-2"></i>Sign Out
+</a>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Sidebar Collapsible Navigation -->
+    <aside class="sidebar">
+        <div
+            class="p-3 d-flex align-items-center justify-content-between border-bottom border-light border-opacity-10 text-white">
+            <span class="fw-bold font-monospace" style="font-size: 0.8rem; letter-spacing: 1px;"><i
+                    class="fas fa-network-wired me-2 text-warning"></i>MAIN CONTROL</span>
+            <button class="btn btn-sm btn-link text-white p-0" id="sidebar-toggle" title="Collapse Sidebar Menu">
+                <i class="fas fa-bars"></i>
+            </button>
+        </div>
+        <ul class="sidebar-menu">
+            <li class="sidebar-item">
+                <a href="dashboard.html" class="sidebar-link">
+                    <i class="fas fa-tachometer-alt"></i>
+                    <span>Dashboard</span>
+                </a>
+            </li>
+            <li class="sidebar-item">
+                <a href="instances.html" class="sidebar-link">
+                    <i class="fas fa-server"></i>
+                    <span>Instances</span>
+                </a>
+            </li>
+            <li class="sidebar-item">
+                <a href="add-instance.html" class="sidebar-link">
+                    <i class="fas fa-plus-circle"></i>
+                    <span>Add New Instance</span>
+                </a>
+            </li>
+            <li class="sidebar-item">
+                <a href="configure-backup.html" class="sidebar-link">
+                    <i class="fas fa-calendar-alt"></i>
+                    <span>Configure Backup</span>
+                </a>
+            </li>
+            <li class="sidebar-item">
+                <a href="backup-now.html" class="sidebar-link">
+                    <i class="fas fa-play-circle"></i>
+                    <span>Backup Now</span>
+                </a>
+            </li>
+            <li class="sidebar-item active">
+                <a href="backup-history.html" class="sidebar-link">
+                    <i class="fas fa-history"></i>
+                    <span>Backup History</span>
+                </a>
+            </li>
+            <li class="sidebar-item">
+                <a href="reports.html" class="sidebar-link">
+                    <i class="fas fa-chart-bar"></i>
+                    <span>Reports</span>
+                </a>
+            </li>
+            <li class="sidebar-item">
+                <a href="notifications.html" class="sidebar-link">
+                    <i class="fas fa-bell"></i>
+                    <span>Notifications</span>
+                </a>
+            </li>
+            <li class="sidebar-item">
+                <a href="settings.html" class="sidebar-link">
+                    <i class="fas fa-sliders-h"></i>
+                    <span>Settings</span>
+                </a>
+            </li>
+            <li class="sidebar-item mt-4 border-top border-light border-opacity-10 pt-3">
+                <a href="login.html" class="sidebar-link text-danger-hover">
+                    <i class="fas fa-sign-out-alt"></i>
+                    <span>Logout</span>
+                </a>
+            </li>
+        </ul>
+    </aside>
+
+    <!-- Main Content Wrapper -->
+    <main class="main-wrapper page-transition">
+        <div class="mb-4">
+            <h4 class="mb-1 fw-bold text-primary"><i class="fas fa-history me-2"></i>Infrastructure Backup Logs Registry
+            </h4>
+            <p class="text-muted mb-0" style="font-size: 0.88rem;">Audit logs ledger registering success & error
+                telemetry outcomes from cron automation or emergency operator runs.</p>
+        </div>
+
+        <div class="custom-card">
+            <!-- Filter Options Toolbar -->
+            <div class="row g-3 mb-4 align-items-center">
+                <!-- Search Query -->
+                <div class="col-12 col-md-4 col-xl-3">
+                    <div class="input-group">
+                        <span class="input-group-text bg-light text-secondary border-end-0"><i
+                                class="fas fa-search"></i></span>
+                        <input type="text" class="form-control bg-light border-start-0 ps-0" id="histSearch"
+                            placeholder="Search logs registry...">
+                    </div>
+                </div>
+
+                <!-- DB Engine Filter -->
+                <div class="col-6 col-md-2">
+                    <select class="form-select bg-light" id="histTypeFilter">
+                        <option value="All">All Engines</option>
+                        <option value="Oracle">Oracle</option>
+                        <option value="MySQL">MySQL</option>
+                    </select>
+                </div>
+
+                <!-- Status Filter -->
+                <div class="col-6 col-md-2">
+                    <select class="form-select bg-light" id="histStatusFilter">
+                        <option value="All">All Statuses</option>
+                        <option value="Success">Success Only</option>
+                        <option value="Failed">Failed Only</option>
+                    </select>
+                </div>
+
+                <!-- Export Utilities -->
+                <div class="col-12 col-md-4 ms-auto text-md-end d-flex gap-2 justify-content-end">
+                    <button class="btn btn-outline-primary btn-sm px-3" onclick="exportData('CSV')">
+                        <i class="fas fa-file-csv me-1 text-success"></i> Export CSV
+                    </button>
+                    <button class="btn btn-outline-primary btn-sm px-3" onclick="exportData('Excel')">
+                        <i class="fas fa-file-excel me-1 text-success"></i> Export Excel
+                    </button>
+                </div>
+            </div>
+
+            <!-- Historical Data Grid -->
+            <div class="table-responsive mb-3">
+                <table class="table table-hover align-middle custom-table">
+                    <thead>
+                        <tr>
+                            <th style="cursor: pointer;" onclick="sortTable('id')">Backup ID <i class="fas fa-sort ms-1"
+                                    style="font-size: 0.75rem;"></i></th>
+                            <th style="cursor: pointer;" onclick="sortTable('name')">Instance Name <i
+                                    class="fas fa-sort ms-1" style="font-size: 0.75rem;"></i></th>
+                            <th>RDBMS</th>
+                            <th style="cursor: pointer;" onclick="sortTable('date')">Timestamp <i
+                                    class="fas fa-sort ms-1" style="font-size: 0.75rem;"></i></th>
+                            <th>Duration</th>
+                            <th>Size</th>
+                            <th>Status</th>
+                            <th>Operational Notes</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="historyTableBody">
+                        <!-- Dynamic Population -->
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Pagination Bar Grid -->
+            <div class="d-flex align-items-center justify-content-between flex-wrap gap-2 pt-2 border-top">
+                <div class="small text-secondary">
+                    Showing <strong id="pag-start">1</strong> to <strong id="pag-end">5</strong> of <strong
+                        id="pag-total">5</strong> entries
+                </div>
+                <nav>
+                    <ul class="pagination pagination-sm mb-0" id="pag-nav">
+                        <!-- Dynamic Numbers -->
+                    </ul>
+                </nav>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer Component -->
+    <footer>
+        <div class="container-fluid px-4">
+            <div class="row align-items-center">
+                <div class="col-md-6 text-center text-md-start">
+                    <h6 class="mb-1 text-white fw-bold">Database Backup Monitoring System &copy; 2026</h6>
+                    <p class="mb-0 text-white-50" style="font-size: 0.75rem;">Designed & Optimized for Government
+                        Enterprise Infrastructure Management</p>
+                </div>
+                <div class="col-md-6 text-center text-md-end mt-3 mt-md-0">
+                    <span class="badge bg-secondary py-2 px-3 me-2">Version 1.0</span>
+                    <span class="badge bg-dark py-2 px-3 text-warning font-monospace"><i
+                            class="fas fa-shield-alt me-1"></i>NIC Standard Level-4 Sec</span>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Bootstrap Bundle JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- Core Application Logic -->
+    <script src="../js/app.js"></script>
+
+    <script>
+        const loggedUser =
+    localStorage.getItem("loggedUser");
+
+if (!loggedUser) {
+
+    alert("Please login first");
+
+    window.location.href =
+        "login.html";
+}
+        let currentSort = { column: 'date', order: 'desc' };
+        let activePage = 1;
+        const itemsPerPage = 5;
+        let loadedBackups = [];
+
+        document.addEventListener("DOMContentLoaded", () => {
+            bindHistoryControls();
+            loadBackupHistory();
+        });
+
+        function bindHistoryControls() {
+            const searchInput = document.getElementById("histSearch");
+            const typeFilter = document.getElementById("histTypeFilter");
+            const statusFilter = document.getElementById("histStatusFilter");
+
+            if (searchInput) {
+                searchInput.addEventListener("input", () => {
+                    activePage = 1;
+                    renderHistoryGrid();
+                });
+            }
+
+            if (typeFilter) {
+                typeFilter.addEventListener("change", () => {
+                    activePage = 1;
+                    renderHistoryGrid();
+                });
+            }
+
+            if (statusFilter) {
+                statusFilter.addEventListener("change", () => {
+                    activePage = 1;
+                    renderHistoryGrid();
+                });
+            }
+        }
+
+        function getHistoryFilters() {
+            const searchInput = document.getElementById("histSearch");
+            const typeFilter = document.getElementById("histTypeFilter");
+            const statusFilter = document.getElementById("histStatusFilter");
+
+            return {
+                query: (searchInput?.value || "").toLowerCase().trim(),
+                type: typeFilter?.value || "All",
+                status: statusFilter?.value || "All"
+            };
+        }
+
+        function formatBackupTimestamp(value) {
+            if (!value) return "—";
+            const date = new Date(value);
+            return Number.isNaN(date.getTime()) ? value : date.toLocaleString();
+        }
+
+        function getStatusBadgeClass(status) {
+            const normalized = (status || "").toLowerCase();
+            if (normalized.includes("success")) return "bg-success";
+            if (normalized.includes("fail") || normalized.includes("error")) return "bg-danger";
+            if (normalized.includes("warning") || normalized.includes("pending")) return "bg-warning text-dark";
+            return "bg-secondary";
+        }
+
+        function updateHistoryFilterOptions(backups) {
+            const typeFilter = document.getElementById("histTypeFilter");
+            const statusFilter = document.getElementById("histStatusFilter");
+
+            if (typeFilter) {
+                const currentType = typeFilter.value;
+                const uniqueTypes = [...new Set(backups.map(b => b.db_type).filter(Boolean))].sort();
+                const options = ["All", ...uniqueTypes];
+                typeFilter.innerHTML = options.map(type => {
+                    const label = type === "All" ? "All Engines" : type;
+                    return `<option value="${type}" ${currentType === type ? "selected" : ""}>${label}</option>`;
+                }).join("");
+            }
+
+            if (statusFilter) {
+                const currentStatus = statusFilter.value;
+                const uniqueStatuses = [...new Set(backups.map(b => b.status).filter(Boolean))].sort();
+                const options = ["All", ...uniqueStatuses];
+                statusFilter.innerHTML = options.map(status => {
+                    const label = status === "All" ? "All Statuses" : status;
+                    return `<option value="${status}" ${currentStatus === status ? "selected" : ""}>${label}</option>`;
+                }).join("");
+            }
+        }
+
+        function renderHistoryGrid() {
+            const { query, type, status } = getHistoryFilters();
+            const filtered = loadedBackups.filter(backup => {
+                const searchableText = [
+                    backup.id,
+                    backup.instance_name,
+                    backup.db_type,
+                    backup.status,
+                    backup.duration,
+                    backup.backup_size,
+                    backup.remarks,
+                    backup.backup_location
+                ].filter(Boolean).join(" ").toLowerCase();
+
+                const matchesQuery = !query || searchableText.includes(query);
+                const matchesType = type === "All" || (backup.db_type || "").toLowerCase() === type.toLowerCase();
+                const matchesStatus = status === "All" || (backup.status || "").toLowerCase() === status.toLowerCase();
+
+                return matchesQuery && matchesType && matchesStatus;
+            });
+
+            const sorted = [...filtered].sort((a, b) => {
+                let valueA = a["backup_date"] || "";
+                let valueB = b["backup_date"] || "";
+
+                if (currentSort.column === "date") {
+                    valueA = new Date(valueA).getTime();
+                    valueB = new Date(valueB).getTime();
+                } else if (currentSort.column === "name") {
+                    valueA = (a.instance_name || "").toLowerCase();
+                    valueB = (b.instance_name || "").toLowerCase();
+                } else if (currentSort.column === "id") {
+                    valueA = (a.id || "").toString().toLowerCase();
+                    valueB = (b.id || "").toString().toLowerCase();
+                } else {
+                    valueA = (a[currentSort.column] || "").toString().toLowerCase();
+                    valueB = (b[currentSort.column] || "").toString().toLowerCase();
+                }
+
+                if (valueA < valueB) return currentSort.order === "asc" ? -1 : 1;
+                if (valueA > valueB) return currentSort.order === "asc" ? 1 : -1;
+                return 0;
+            });
+
+            const totalItems = sorted.length;
+            const totalPages = Math.max(1, Math.ceil(totalItems / itemsPerPage));
+            activePage = Math.min(activePage, totalPages);
+
+            const startIndex = totalItems === 0 ? 0 : (activePage - 1) * itemsPerPage;
+            const endIndex = Math.min(startIndex + itemsPerPage, totalItems);
+            const paginated = sorted.slice(startIndex, endIndex);
+
+            const tbody = document.getElementById("historyTableBody");
+            if (paginated.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="9" class="text-center py-4 text-muted"><i class="fas fa-folder-open me-1"></i> No matching historical backup logs found.</td></tr>`;
+                document.getElementById("pag-start").textContent = 0;
+                document.getElementById("pag-end").textContent = 0;
+                document.getElementById("pag-total").textContent = 0;
+                document.getElementById("pag-nav").innerHTML = "";
+                return;
+            }
+
+            tbody.innerHTML = paginated.map(backup => `
+                <tr>
+                    <td class="font-monospace fw-bold text-dark small">${backup.id}</td>
+                    <td class="fw-bold text-secondary">${backup.instance_name || "—"}</td>
+                    <td><span class="badge bg-light text-dark border">${backup.db_type || "—"}</span></td>
+                    <td class="font-monospace small">${formatBackupTimestamp(backup.backup_date)}</td>
+                    <td class="font-monospace">${backup.duration || "—"}</td>
+                    <td class="font-monospace fw-semibold">${backup.backup_size || "—"}</td>
+                    <td><span class="badge ${getStatusBadgeClass(backup.status)}">${backup.status || "Unknown"}</span></td>
+                    <td class="text-muted small">${backup.remarks || "—"}</td>
+                    <td>
+                        <div class="d-flex gap-1">
+                            ${backup.backup_location ? `
+                                <a href="http://127.0.0.1:5000/api/backups/download/${backup.id}" class="btn btn-outline-success btn-sm px-2" title="Download backup dump file">
+                                    <i class="fas fa-download"></i>
+                                </a>
+                            ` : `
+                                <button class="btn btn-outline-secondary btn-sm px-2" disabled title="No dump file stored for this backup">
+                                    <i class="fas fa-download"></i>
+                                </button>
+                            `}
+                            <button onclick="rerunBackup('${backup.instance_name || ''}')" class="btn btn-outline-primary btn-sm px-2" title="Re-run manual backup">
+                                <i class="fas fa-redo"></i>
+                            </button>
+                        </div>
+                    </td>
+                </tr>
+            `).join("");
+
+            document.getElementById("pag-start").textContent = totalItems === 0 ? 0 : startIndex + 1;
+            document.getElementById("pag-end").textContent = endIndex;
+            document.getElementById("pag-total").textContent = totalItems;
+
+            const nav = document.getElementById("pag-nav");
+            nav.innerHTML = "";
+            if (totalPages > 1) {
+                for (let page = 1; page <= totalPages; page += 1) {
+                    nav.innerHTML += `
+                        <li class="page-item ${page === activePage ? "active" : ""}">
+                            <button class="page-link" onclick="changePage(${page})">${page}</button>
+                        </li>
+                    `;
+                }
+            }
+        }
+
+        function changePage(page) {
+            activePage = page;
+            renderHistoryGrid();
+        }
+
+        function sortTable(column) {
+            if (currentSort.column === column) {
+                currentSort.order = currentSort.order === 'asc' ? 'desc' : 'asc';
+            } else {
+                currentSort.column = column;
+                currentSort.order = 'asc';
+            }
+            activePage = 1;
+            renderHistoryGrid();
+        }
+
+        // Exports real database backup history
+        function exportData(format) {
+            if (!loadedBackups || loadedBackups.length === 0) {
+                showToast("Export Failed", "No database logs available to export.", "warning");
+                return;
+            }
+
+            showToast(`Generating ${format} Document`, `Preparing operational logs matrix. Exporting...`, "info");
+
+            setTimeout(() => {
+                // Constructing CSV header
+                let csvContent = "data:text/csv;charset=utf-8,Backup ID,Instance Name,Timestamp,Duration,Size,Status,Remarks\n";
+                
+                // Add rows
+                csvContent += loadedBackups.map(b => {
+                    const id = b.id;
+                    const name = (b.instance_name || "").replace(/"/g, '""');
+                    const timestamp = b.backup_date ? new Date(b.backup_date).toLocaleString() : "";
+                    const duration = b.duration || "";
+                    const size = b.backup_size || "";
+                    const status = b.status || "";
+                    const remarks = (b.remarks || "-").replace(/"/g, '""');
+                    
+                    return `"${id}","${name}","${timestamp}","${duration}","${size}","${status}","${remarks}"`;
+                }).join("\n");
+
+                const encodedUri = encodeURI(csvContent);
+                const link = document.createElement("a");
+                link.setAttribute("href", encodedUri);
+                link.setAttribute("download", `BMS_Backup_History_Logs.${format === 'CSV' ? 'csv' : 'xls'}`);
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+
+                showToast(`${format} Export Succeeded`, `Report downloaded successfully.`, "success");
+            }, 800);
+        }
+
+        // Individual Action handlers
+        async function rerunBackup(name) {
+            const instances = await getInstancesFromServer();
+            const instance = instances.find(i => i.name === name);
+            if (instance) {
+                window.location.href = `backup-now.html?id=${instance.id}`;
+            } else {
+                window.location.href = `backup-now.html`;
+            }
+        }
+
+        const logoutBtn =
+    document.getElementById("logoutBtn");
+
+if (logoutBtn) {
+
+    logoutBtn.addEventListener(
+        "click",
+        () => {
+
+            localStorage.removeItem(
+                "loggedUser"
+            );
+
+            window.location.href =
+                "login.html";
+        }
+    );
+}
+
+async function loadBackupHistory() {
+    try {
+        const response = await fetch("http://127.0.0.1:5000/api/backups");
+        if (!response.ok) {
+            throw new Error(`Failed to fetch backup history (${response.status})`);
+        }
+
+        const backups = await response.json();
+        loadedBackups = Array.isArray(backups) ? backups : [];
+        updateHistoryFilterOptions(loadedBackups);
+        renderHistoryGrid();
+    } catch (error) {
+        console.error("Backup History Error:", error);
+        const tableBody = document.getElementById("historyTableBody");
+        if (tableBody) {
+            tableBody.innerHTML = `<tr><td colspan="9" class="text-center py-4 text-danger"><i class="fas fa-exclamation-triangle me-1"></i> Unable to load backup history right now.</td></tr>`;
+        }
+    }
+}
+    </script>
+</body>
+
+</html>

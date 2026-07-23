@@ -1,0 +1,380 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Instance Details - Database Backup Monitoring System</title>
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome Icons -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <!-- Custom Style Sheet -->
+    <link href="../css/style.css" rel="stylesheet">
+</head>
+<body>
+    <!-- Topbar Navigation -->
+    <nav class="topbar">
+        <a href="dashboard.html" class="topbar-brand">
+            <div class="d-inline-flex align-items-center justify-content-center bg-white" style="width: 36px; height: 36px; border-radius: 6px;">
+                <i class="fas fa-train text-primary" style="font-size: 1.25rem;"></i>
+            </div>
+            <span>Database Backup Monitoring System</span>
+        </a>
+        
+        <div class="topbar-actions">
+            <div class="topbar-icon" id="theme-toggle-btn" title="Toggle Theme mode">
+                <i class="fas fa-moon text-light"></i>
+            </div>
+            
+            <a href="notifications.html" class="topbar-icon text-decoration-none" title="View active notifications">
+                <i class="fas fa-bell"></i>
+                <span class="badge rounded-pill bg-danger notification-count-badge">5</span>
+            </a>
+            
+            <div class="dropdown">
+                <div class="user-profile-btn" data-bs-toggle="dropdown" aria-expanded="false">
+                    <img
+    src="https://cdn-icons-png.flaticon.com/512/3135/3135715.png"
+    alt="User Image"
+    style="width:40px;height:40px;border-radius:50%;object-fit:cover;">
+                    <span class="d-none d-sm-inline">admin</span>
+                    <i class="fas fa-chevron-down ms-1" style="font-size: 0.75rem;"></i>
+                </div>
+                <ul class="dropdown-menu dropdown-menu-end shadow-sm border-0 mt-2">
+                    <li><a class="dropdown-item" href="settings.html"><i class="fas fa-user-cog me-2 text-secondary"></i>My Profile</a></li>
+                    <li><a class="dropdown-item" href="settings.html"><i class="fas fa-cog me-2 text-secondary"></i>System Settings</a></li>
+                    <li><hr class="dropdown-divider"></li>
+                    <li>
+    <a class="dropdown-item text-danger"
+       href="#"
+       id="logoutBtn">
+
+        <i class="fas fa-sign-out-alt me-2"></i>
+        Sign Out
+
+    </a>
+</li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Sidebar Collapsible Navigation -->
+    <aside class="sidebar">
+       <div class="sidebar-section-title">
+    Main Control
+</div>
+        <ul class="sidebar-menu">
+            <li class="sidebar-item">
+                <a href="dashboard.html" class="sidebar-link">
+                    <i class="fas fa-tachometer-alt"></i>
+                    <span>Dashboard</span>
+                </a>
+            </li>
+            <li class="sidebar-item active">
+                <a href="instances.html" class="sidebar-link">
+                    <i class="fas fa-server"></i>
+                    <span>Instances</span>
+                </a>
+            </li>
+            <li class="sidebar-item">
+                <a href="add-instance.html" class="sidebar-link">
+                    <i class="fas fa-plus-circle"></i>
+                    <span>Add New Instance</span>
+                </a>
+            </li>
+            <li class="sidebar-item">
+                <a href="configure-backup.html" class="sidebar-link">
+                    <i class="fas fa-calendar-alt"></i>
+                    <span>Configure Backup</span>
+                </a>
+            </li>
+            <li class="sidebar-item">
+                <a href="backup-now.html" class="sidebar-link">
+                    <i class="fas fa-play-circle"></i>
+                    <span>Backup Now</span>
+                </a>
+            </li>
+            <li class="sidebar-item">
+                <a href="backup-history.html" class="sidebar-link">
+                    <i class="fas fa-history"></i>
+                    <span>Backup History</span>
+                </a>
+            </li>
+            <li class="sidebar-item">
+                <a href="reports.html" class="sidebar-link">
+                    <i class="fas fa-chart-bar"></i>
+                    <span>Reports</span>
+                </a>
+            </li>
+            <li class="sidebar-item">
+                <a href="notifications.html" class="sidebar-link">
+                    <i class="fas fa-bell"></i>
+                    <span>Notifications</span>
+                </a>
+            </li>
+            <li class="sidebar-item">
+                <a href="settings.html" class="sidebar-link">
+                    <i class="fas fa-sliders-h"></i>
+                    <span>Settings</span>
+                </a>
+            </li>
+            <li class="sidebar-item mt-4 border-top border-light border-opacity-10 pt-3">
+                <a href="login.html" class="sidebar-link text-danger-hover">
+                    <i class="fas fa-sign-out-alt"></i>
+                    <span>Logout</span>
+                </a>
+            </li>
+        </ul>
+    </aside>
+
+    <!-- Main Content Wrapper -->
+    <main class="main-wrapper page-transition">
+        <div class="mb-4">
+            <a href="instances.html" class="btn btn-outline-secondary btn-sm mb-3">
+                <i class="fas fa-arrow-left me-1"></i> Back to Grid
+            </a>
+            <div class="d-flex align-items-center justify-content-between flex-wrap gap-2">
+                <div>
+                    <h4 class="mb-1 fw-bold text-primary" id="detail-title-name"><i class="fas fa-microchip me-2"></i>ICARD (CRIS Division)</h4>
+                    <p class="text-muted mb-0" style="font-size: 0.88rem;">Advanced operational diagnostics, connectivity reports, and archive history logs.</p>
+                </div>
+                <div class="d-flex gap-2">
+                    <a href="#" id="action-configure" class="btn btn-outline-primary btn-sm">
+                        <i class="fas fa-calendar-cog me-1"></i> Adjust Schedule
+                    </a>
+                    <a href="#" id="action-backup" class="btn btn-maroon btn-sm">
+                        <i class="fas fa-play me-1"></i> Execute Backup Now
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <!-- Left Panel: Technical Specification Sheet -->
+            <div class="col-12 col-xl-7">
+                <div class="custom-card mb-4">
+                    <div class="card-title-bar">
+                        <h5><i class="fas fa-tasks text-primary"></i>Technical Specifications Sheet</h5>
+                        <span class="badge bg-success font-monospace" id="detail-status">Connected</span>
+                    </div>
+
+                    <div class="table-responsive">
+                        <table class="table table-bordered mb-0 align-middle">
+                            <tbody>
+                                <tr>
+                                    <td class="fw-bold bg-light text-secondary" style="width: 35%; font-size: 0.85rem;">Instance Name / ID</td>
+                                    <td class="font-monospace fw-semibold" id="lbl-name" style="font-size: 0.88rem;">ICARD</td>
+                                </tr>
+                                <tr>
+                                    <td class="fw-bold bg-light text-secondary" style="font-size: 0.85rem;">Database Name</td>
+                                    <td class="font-monospace" id="lbl-dbname">—</td>
+                                </tr>
+                                <tr>
+                                    <td class="fw-bold bg-light text-secondary" style="font-size: 0.85rem;">RDBMS Engine Type</td>
+                                    <td><span class="badge bg-primary text-uppercase font-monospace" id="lbl-type">Oracle</span></td>
+                                </tr>
+                                <tr>
+                                    <td class="fw-bold bg-light text-secondary" style="font-size: 0.85rem;">Node IP Address</td>
+                                    <td class="font-monospace" id="lbl-ip">10.180.18.2</td>
+                                </tr>
+                                <tr>
+                                    <td class="fw-bold bg-light text-secondary" style="font-size: 0.85rem;">Port Number</td>
+                                    <td class="font-monospace" id="lbl-port">1521</td>
+                                </tr>
+                                <tr>
+                                    <td class="fw-bold bg-light text-secondary" style="font-size: 0.85rem;">Connection Health Metric</td>
+                                    <td class="fw-bold text-success font-monospace" id="lbl-health">99.8% Average Availability</td>
+                                </tr>
+                                <tr>
+                                    <td class="fw-bold bg-light text-secondary" style="font-size: 0.85rem;">Backup Storage Destination</td>
+                                    <td><code class="text-secondary font-monospace" style="font-size: 0.8rem;" id="lbl-location">D:/DatabaseBackup/</code></td>
+                                </tr>
+                                <tr>
+                                    <td class="fw-bold bg-light text-secondary" style="font-size: 0.85rem;">Last Backup Date/Time</td>
+                                    <td class="font-monospace" id="lbl-lastbk">25-05-2026 10:30 AM</td>
+                                </tr>
+                                <tr>
+                                    <td class="fw-bold bg-light text-secondary" style="font-size: 0.85rem;">Last Backup Duration</td>
+                                    <td class="font-monospace" id="lbl-duration">25 mins 04 seconds</td>
+                                </tr>
+                                <tr>
+                                    <td class="fw-bold bg-light text-secondary" style="font-size: 0.85rem;">Last Backup File Size</td>
+                                    <td class="font-monospace fw-semibold" id="lbl-size">108.5 GB (Gzip archive)</td>
+                                </tr>
+                                <tr>
+                                    <td class="fw-bold bg-light text-secondary" style="font-size: 0.85rem;">Last Backup Remark</td>
+                                    <td class="text-muted italic" style="font-size: 0.85rem;" id="lbl-remark">Weekly cold schema dump accomplished</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Server Performance Status Mock -->
+                <div class="custom-card">
+                    <div class="card-title-bar">
+                        <h5><i class="fas fa-chart-area text-maroon"></i>Infrastructure Performance Telemetry</h5>
+                    </div>
+                    <div class="row text-center g-3">
+                        <div class="col-4">
+                            <div class="border rounded p-3">
+                                <small class="text-muted d-block font-monospace">CPU UTILITY</small>
+                                <span class="fw-bold text-dark font-monospace" style="font-size: 1.35rem;">12.4%</span>
+                            </div>
+                        </div>
+                        <div class="col-4">
+                            <div class="border rounded p-3">
+                                <small class="text-muted d-block font-monospace">RAM UTILITY</small>
+                                <span class="fw-bold text-dark font-monospace" style="font-size: 1.35rem;">58.9%</span>
+                            </div>
+                        </div>
+                        <div class="col-4">
+                            <div class="border rounded p-3">
+                                <small class="text-muted d-block font-monospace">NETWORK I/O</small>
+                                <span class="fw-bold text-success font-monospace" style="font-size: 1.35rem;">Active</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right Panel: Chronological Backup Timeline -->
+            <div class="col-12 col-xl-5 mt-4 mt-xl-0">
+                <div class="custom-card h-100">
+                    <div class="card-title-bar">
+                        <h5><i class="fas fa-stream text-primary"></i>Operational Backup Timeline</h5>
+                        <span class="badge bg-secondary font-monospace">Audit Logs</span>
+                    </div>
+
+                    <div class="timeline-wrapper">
+                        <!-- Event 1 -->
+                        <div class="timeline-item success">
+                            <div class="timeline-badge"></div>
+                            <div class="timeline-content">
+                                <div class="d-flex justify-content-between mb-1">
+                                    <span class="badge bg-success font-monospace" style="font-size: 0.65rem;">COMPLETED SUCCESSFULLY</span>
+                                    <small class="text-muted font-monospace fw-bold" style="font-size: 0.72rem;">25-05-2026 10:30 AM</small>
+                                </div>
+                                <h6 class="fw-bold text-dark mb-1" style="font-size: 0.85rem;">Incremental Backup Run Succeeded</h6>
+                                <p class="text-muted mb-0" style="font-size: 0.75rem;">Archive successfully synced to network storage server node. Checked MD5 sum matches master checksum.</p>
+                            </div>
+                        </div>
+
+                        <!-- Event 2 -->
+                        <div class="timeline-item failed">
+                            <div class="timeline-badge"></div>
+                            <div class="timeline-content">
+                                <div class="d-flex justify-content-between mb-1">
+                                    <span class="badge bg-danger font-monospace" style="font-size: 0.65rem;">BACKUP FAILED</span>
+                                    <small class="text-muted font-monospace fw-bold" style="font-size: 0.72rem;">24-05-2026 10:30 AM</small>
+                                </div>
+                                <h6 class="fw-bold text-danger mb-1" style="font-size: 0.85rem;">Network Destination Unreachable</h6>
+                                <p class="text-muted mb-0" style="font-size: 0.75rem;">NFS storage partition rejected credentials verification. Handshake failed. System administrator notified automatically.</p>
+                            </div>
+                        </div>
+
+                        <!-- Event 3 -->
+                        <div class="timeline-item success">
+                            <div class="timeline-badge"></div>
+                            <div class="timeline-content">
+                                <div class="d-flex justify-content-between mb-1">
+                                    <span class="badge bg-success font-monospace" style="font-size: 0.65rem;">COMPLETED SUCCESSFULLY</span>
+                                    <small class="text-muted font-monospace fw-bold" style="font-size: 0.72rem;">23-05-2026 10:30 AM</small>
+                                </div>
+                                <h6 class="fw-bold text-dark mb-1" style="font-size: 0.85rem;">Routine Daily Backup Run Succeeded</h6>
+                                <p class="text-muted mb-0" style="font-size: 0.75rem;">Completed backup of core tables schema. Size: 106.8 GB. Compression ratio: 4.1x.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer Component -->
+    <footer>
+        <div class="container-fluid px-4">
+            <div class="row align-items-center">
+                <div class="col-md-6 text-center text-md-start">
+                    <h6 class="mb-1 text-white fw-bold">Database Backup Monitoring System &copy; 2026</h6>
+                    <p class="mb-0 text-white-50" style="font-size: 0.75rem;">Designed & Optimized for Government Enterprise Infrastructure Management</p>
+                </div>
+                <div class="col-md-6 text-center text-md-end mt-3 mt-md-0">
+                    <span class="badge bg-secondary py-2 px-3 me-2">Version 1.0</span>
+                    <span class="badge bg-dark py-2 px-3 text-warning font-monospace"><i class="fas fa-shield-alt me-1"></i>NIC Standard Level-4 Sec</span>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Bootstrap Bundle JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- Core Application Logic -->
+    <script src="../js/app.js"></script>
+
+    <script>
+        const loggedUser = localStorage.getItem("loggedUser");
+
+if (!loggedUser) {
+    alert("Please login first");
+    window.location.href = "login.html";
+}
+        document.addEventListener("DOMContentLoaded", async () => {
+            // Read target instance ID from query string parameters
+            const urlParams = new URLSearchParams(window.location.search);
+            let instanceId = urlParams.get('id');
+
+            const instances = await getInstancesFromServer();
+            // Default to first instance if invalid or missing parameter
+            let instance = instances.find(i => i.id === instanceId);
+            if (!instance) {
+                instance = instances[0];
+            }
+
+            if (instance) {
+                // Populate details on the DOM
+                document.getElementById("detail-title-name").innerHTML = `<i class="fas fa-microchip me-2"></i>${instance.name}`;
+                document.getElementById("lbl-name").textContent = `${instance.name} (ID: ${instance.id})`;
+                document.getElementById("lbl-dbname").textContent = instance.dbName || "—";
+                document.getElementById("lbl-type").textContent = instance.type || "—";
+                document.getElementById("lbl-ip").textContent = instance.ip || "—";
+                document.getElementById("lbl-port").textContent = instance.port || "—";
+                document.getElementById("lbl-location").textContent = instance.backupLocation || "—";
+                document.getElementById("lbl-lastbk").textContent = instance.lastBackup || "No backup recorded";
+                document.getElementById("lbl-duration").textContent = instance.lastBackupDuration || "No backup recorded";
+                document.getElementById("lbl-size").textContent = instance.lastBackupSize || "No backup recorded";
+                document.getElementById("lbl-remark").textContent = instance.lastBackupRemark || "No backup recorded";
+
+                const statusBadge = document.getElementById("detail-status");
+                statusBadge.textContent = instance.status || "Unknown";
+                statusBadge.className = `badge font-monospace ${instance.status === 'Connected' ? 'bg-success' : (instance.status === 'Disconnected' ? 'bg-danger' : 'bg-warning text-dark')}`;
+
+                const lblHealth = document.getElementById("lbl-health");
+                if (instance.status === 'Connected') {
+                    lblHealth.textContent = "Connected / reachable";
+                    lblHealth.className = "fw-bold text-success font-monospace";
+                } else if (instance.status === 'Disconnected') {
+                    lblHealth.textContent = "Disconnected / unreachable";
+                    lblHealth.className = "fw-bold text-danger font-monospace";
+                } else {
+                    lblHealth.textContent = "Warning / degraded";
+                    lblHealth.className = "fw-bold text-warning font-monospace";
+                }
+
+                // Dynamically update action anchor tags
+                document.getElementById("action-configure").href = `configure-backup.html?id=${instance.id}`;
+                document.getElementById("action-backup").href = `backup-now.html?id=${instance.id}`;
+            }
+        });
+        const logoutBtn = document.getElementById("logoutBtn");
+
+if (logoutBtn) {
+    logoutBtn.addEventListener("click", () => {
+        localStorage.removeItem("loggedUser");
+        window.location.href = "login.html";
+    });
+}
+    </script>
+</body>
+</html>

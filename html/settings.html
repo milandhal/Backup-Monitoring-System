@@ -1,0 +1,592 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Settings - Database Backup Monitoring System</title>
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome Icons -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <!-- Custom Style Sheet -->
+    <link href="../css/style.css" rel="stylesheet">
+</head>
+<body>
+    <!-- Topbar Navigation -->
+    <nav class="topbar">
+        <a href="dashboard.html" class="topbar-brand">
+            <div class="d-inline-flex align-items-center justify-content-center bg-white" style="width: 36px; height: 36px; border-radius: 6px;">
+                <i class="fas fa-train text-primary" style="font-size: 1.25rem;"></i>
+            </div>
+            <span>Database Backup Monitoring System</span>
+        </a>
+        
+        <div class="topbar-actions">
+            <div class="topbar-icon" id="theme-toggle-btn" title="Toggle Theme mode">
+                <i class="fas fa-moon text-light"></i>
+            </div>
+            
+            <a href="notifications.html" class="topbar-icon text-decoration-none" title="View active notifications">
+                <i class="fas fa-bell"></i>
+                <span class="badge rounded-pill bg-danger notification-count-badge">5</span>
+            </a>
+            
+            <div class="dropdown">
+                <div class="user-profile-btn" data-bs-toggle="dropdown" aria-expanded="false">
+                            <!-- <img id="profilePic" src="../images/admin.png" alt="User Image"> -->
+                            
+                            <img
+    src="https://cdn-icons-png.flaticon.com/512/3135/3135715.png"
+    alt="User Image"
+    style="width:40px;height:40px;border-radius:50%;object-fit:cover;">
+                                <span id="navbarUsername"class="d-none d-sm-inline"></span>
+                    <i class="fas fa-chevron-down ms-1" style="font-size: 0.75rem;"></i>
+                </div>
+                <ul class="dropdown-menu dropdown-menu-end shadow-sm border-0 mt-2">
+                    <li><a class="dropdown-item" href="settings.html"><i class="fas fa-user-cog me-2 text-secondary"></i>My Profile</a></li>
+                    <li><a class="dropdown-item" href="settings.html"><i class="fas fa-cog me-2 text-secondary"></i>System Settings</a></li>
+                    <li><hr class="dropdown-divider"></li>
+                    <li>
+    <a class="dropdown-item text-danger"
+       href="#"
+       id="logoutBtn">
+
+        <i class="fas fa-sign-out-alt me-2"></i>
+        Sign Out
+
+    </a>
+</li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Sidebar Collapsible Navigation -->
+    <aside class="sidebar">
+       <div class="sidebar-section-title">
+    Main Control
+</div>
+        <ul class="sidebar-menu">
+            <li class="sidebar-item">
+                <a href="dashboard.html" class="sidebar-link">
+                    <i class="fas fa-tachometer-alt"></i>
+                    <span>Dashboard</span>
+                </a>
+            </li>
+            <li class="sidebar-item">
+                <a href="instances.html" class="sidebar-link">
+                    <i class="fas fa-server"></i>
+                    <span>Instances</span>
+                </a>
+            </li>
+            <li class="sidebar-item">
+                <a href="add-instance.html" class="sidebar-link">
+                    <i class="fas fa-plus-circle"></i>
+                    <span>Add New Instance</span>
+                </a>
+            </li>
+            <li class="sidebar-item">
+                <a href="configure-backup.html" class="sidebar-link">
+                    <i class="fas fa-calendar-alt"></i>
+                    <span>Configure Backup</span>
+                </a>
+            </li>
+            <li class="sidebar-item">
+                <a href="backup-now.html" class="sidebar-link">
+                    <i class="fas fa-play-circle"></i>
+                    <span>Backup Now</span>
+                </a>
+            </li>
+            <li class="sidebar-item">
+                <a href="backup-history.html" class="sidebar-link">
+                    <i class="fas fa-history"></i>
+                    <span>Backup History</span>
+                </a>
+            </li>
+            <li class="sidebar-item">
+                <a href="reports.html" class="sidebar-link">
+                    <i class="fas fa-chart-bar"></i>
+                    <span>Reports</span>
+                </a>
+            </li>
+            <li class="sidebar-item">
+                <a href="notifications.html" class="sidebar-link">
+                    <i class="fas fa-bell"></i>
+                    <span>Notifications</span>
+                </a>
+            </li>
+            <li class="sidebar-item active">
+                <a href="settings.html" class="sidebar-link">
+                    <i class="fas fa-sliders-h"></i>
+                    <span>Settings</span>
+                </a>
+            </li>
+            <li class="sidebar-item mt-4 border-top border-light border-opacity-10 pt-3">
+                <a href="login.html" class="sidebar-link text-danger-hover">
+                    <i class="fas fa-sign-out-alt"></i>
+                    <span>Logout</span>
+                </a>
+            </li>
+        </ul>
+    </aside>
+
+    <!-- Main Content Wrapper -->
+    <main class="main-wrapper page-transition">
+        <div class="mb-4">
+            <h4 class="mb-1 fw-bold text-primary"><i class="fas fa-sliders-h me-2"></i>Administrative System Settings</h4>
+            <p class="text-muted mb-0" style="font-size: 0.88rem;">Configure administrative credentials, SMS & SMTP mail gateways, backup schedules, and active visual preferences.</p>
+        </div>
+
+        <div class="row">
+            <!-- Left Side Tabbing Navigation -->
+            <div class="col-12 col-md-4 col-xl-3">
+                <div class="custom-card p-3 mb-4">
+                    <h6 class="fw-bold text-secondary mb-3 small"><i class="fas fa-sliders-h me-2 text-primary"></i>Configuration Tabs</h6>
+                    <div class="nav flex-column nav-pills settings-nav" id="settingsTabs" role="tablist">
+                        <button class="nav-link active text-start" id="tab-user-btn" data-bs-toggle="pill" data-bs-target="#tab-user" type="button" role="tab"><i class="fas fa-user-circle me-2"></i>User Profile Settings</button>
+                        <button class="nav-link text-start" id="tab-smtp-btn" data-bs-toggle="pill" data-bs-target="#tab-smtp" type="button" role="tab"><i class="fas fa-envelope me-2"></i>Email SMTP Settings</button>
+                        <button class="nav-link text-start" id="tab-sms-btn" data-bs-toggle="pill" data-bs-target="#tab-sms" type="button" role="tab"><i class="fas fa-sms me-2"></i>SMS Gateway Config</button>
+                        <button class="nav-link text-start" id="tab-retention-btn" data-bs-toggle="pill" data-bs-target="#tab-retention" type="button" role="tab"><i class="fas fa-hdd me-2"></i>Backup Policies</button>
+                        <button class="nav-link text-start" id="tab-theme-btn" data-bs-toggle="pill" data-bs-target="#tab-theme" type="button" role="tab"><i class="fas fa-palette me-2"></i>Visual Preferences</button>
+                        <button class="nav-link text-start" id="tab-sys-btn" data-bs-toggle="pill" data-bs-target="#tab-sys" type="button" role="tab"><i class="fas fa-sliders-h me-2"></i>System Intervals</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right Side Tabbing Contents -->
+            <div class="col-12 col-md-8 col-xl-9">
+                <div class="tab-content" id="settingsTabContent">
+                    
+                    <!-- 1. User Settings Profile Tab -->
+                    <div class="tab-pane fade show active" id="tab-user" role="tabpanel">
+                        <div class="custom-card">
+                            <div class="card-title-bar">
+                                <h5><i class="fas fa-user-circle text-primary"></i>Operator Profile Settings</h5>
+                                <span class="badge bg-secondary font-monospace">Level-3 Sec Clearance</span>
+                            </div>
+                            <form class="settings-form">
+                                <div class="row g-3">
+                                    <div class="col-12 col-md-6">
+                                        <label class="form-label fw-semibold text-secondary small">Operator Username</label>
+                                        <input type="text"
+       id="profileUsername"
+       class="form-control font-monospace bg-light"
+       readonly>
+                                    </div>
+                                    <div class="col-12 col-md-6">
+                                        <label class="form-label fw-semibold text-secondary small">Employee Reference ID</label>
+                                        <input type="text" class="form-control font-monospace bg-light" id="employeeReferenceId" readonly>
+                                    </div>
+                                    <div class="col-12 col-md-6">
+                                        <label class="form-label fw-semibold text-secondary small">Registered Email</label>
+                                       <input type="email"
+       id="profileEmail"
+       class="form-control"
+       required>
+                                    </div>
+                                    <div class="col-12 col-md-6">
+                                        <label class="form-label fw-semibold text-secondary small">Mobile Gateway SMS Number</label>
+                                        <input type="text" class="form-control font-monospace" id="mobileNumber" required>
+                                    </div>
+                                    
+                                    <div class="col-12 pt-3 border-top mt-4">
+                                        <h6 class="fw-bold mb-3 text-secondary small"><i class="fas fa-key me-2 text-primary"></i>Update Security Passcode</h6>
+                                    </div>
+                                    <div class="col-12 col-md-4">
+                                        <label class="form-label fw-semibold text-secondary small">Current Passcode</label>
+                                        <input type="password" class="form-control font-monospace" placeholder="••••••••">
+                                    </div>
+                                    <div class="col-12 col-md-4">
+                                        <label class="form-label fw-semibold text-secondary small">New Security Passcode</label>
+                                        <input type="password" class="form-control font-monospace" placeholder="••••••••">
+                                    </div>
+                                    <div class="col-12 col-md-4">
+                                        <label class="form-label fw-semibold text-secondary small">Confirm New Passcode</label>
+                                        <input type="password" class="form-control font-monospace" placeholder="••••••••">
+                                    </div>
+
+                                    <div class="col-12 pt-3">
+                                        <div class="form-check form-switch bg-light border p-3 rounded">
+                                            <input class="form-check-input ms-0 me-3" type="checkbox" id="mfaToggle" checked>
+                                            <label class="form-check-label fw-semibold text-secondary small" for="mfaToggle">
+                                                <i class="fas fa-shield-alt me-1 text-success"></i> Enable Multi-Factor Authentication (OTP sent via RailNet SMS Gateway)
+                                            </label>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-12 border-top pt-4 text-end">
+                                        <button type="submit" class="btn btn-maroon px-4 fw-bold">Update Profile Parameters</button>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+
+                    <!-- 2. Email SMTP Gateway Tab -->
+                    <div class="tab-pane fade" id="tab-smtp" role="tabpanel">
+                        <div class="custom-card">
+                            <div class="card-title-bar">
+                                <h5><i class="fas fa-envelope text-primary"></i>SMTP Relay Settings</h5>
+                                <span class="badge bg-secondary font-monospace">Mail Router Active</span>
+                            </div>
+                            <form class="settings-form">
+                                <div class="row g-3">
+                                    <div class="col-12 col-md-8">
+                                        <label class="form-label fw-semibold text-secondary small">SMTP Mail server Host IP / Address</label>
+                                        <input type="text" class="form-control font-monospace" id="smtpHost" required>
+                                    </div>
+                                    <div class="col-12 col-md-4">
+                                        <label class="form-label fw-semibold text-secondary small">Port Number</label>
+                                        <input type="number" class="form-control font-monospace" id="smtpPort" required>
+                                    </div>
+                                    <div class="col-12 col-md-6">
+                                        <label class="form-label fw-semibold text-secondary small">Secure Handshake Protocol</label>
+                                        <select class="form-select" id="smtpProtocol" required>
+                                            <option value="SSL/TLS (Encrypted)">SSL/TLS (Encrypted)</option>
+                                            <option value="STARTTLS (Recommended)">STARTTLS (Recommended)</option>
+                                            <option value="Plain SMTP (Unsecured)">Plain SMTP (Unsecured)</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-12 col-md-6">
+                                        <label class="form-label fw-semibold text-secondary small">Sender Display Name</label>
+                                        <input type="text" class="form-control" id="senderDisplayName" required>
+                                    </div>
+                                    
+                                    <div class="col-12 border-top pt-4 mt-4 d-flex justify-content-between flex-wrap gap-2">
+                                        <button type="button" class="btn btn-outline-primary" id="btnTestMail">
+                                            <span id="mailSpinner" class="spinner-border spinner-border-sm me-2" style="display: none;"></span>
+                                            <i class="fas fa-paper-plane me-1"></i> Send Test Verification Mail
+                                        </button>
+                                        <button type="submit" class="btn btn-maroon px-4 fw-bold">Save SMTP Configurations</button>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+
+                    <!-- 3. SMS Gateway Tab -->
+                    <div class="tab-pane fade" id="tab-sms" role="tabpanel">
+                        <div class="custom-card">
+                            <div class="card-title-bar">
+                                <h5><i class="fas fa-sms text-primary"></i>NIC / RailTel SMS Gateway Configuration</h5>
+                                <span class="badge bg-secondary font-monospace">SMS Bridge Ready</span>
+                            </div>
+                            <form class="settings-form">
+                                <div class="row g-3">
+                                    <div class="col-12">
+                                        <label class="form-label fw-semibold text-secondary small">HTTP API Gateway Gateway URL</label>
+                                        <input type="text" class="form-control font-monospace" id="smsApiUrl" required>
+                                    </div>
+                                    <div class="col-12 col-md-6">
+                                        <label class="form-label fw-semibold text-secondary small">Sender Sender ID (NIC Header)</label>
+                                        <input type="text" class="form-control font-monospace" id="smsSenderId" required maxlength="6">
+                                    </div>
+                                    <div class="col-12 col-md-6">
+                                        <label class="form-label fw-semibold text-secondary small">API Authorization Secret Passkey</label>
+                                        <input type="password" class="form-control font-monospace" id="smsApiSecret" required>
+                                    </div>
+
+                                    <div class="col-12 border-top pt-4 mt-4 d-flex justify-content-between flex-wrap gap-2">
+                                        <button type="button" class="btn btn-outline-primary" id="btnTestSms">
+                                            <span id="smsSpinner" class="spinner-border spinner-border-sm me-2" style="display: none;"></span>
+                                            <i class="fas fa-mobile-alt me-1"></i> Send Test Handshake SMS
+                                        </button>
+                                        <button type="submit" class="btn btn-maroon px-4 fw-bold">Save SMS Gate Settings</button>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+
+                    <!-- 4. Backup Retention Policies Tab -->
+                    <div class="tab-pane fade" id="tab-retention" role="tabpanel">
+                        <div class="custom-card">
+                            <div class="card-title-bar">
+                                <h5><i class="fas fa-hdd text-primary"></i>Backup Retention & Storage Management</h5>
+                                <span class="badge bg-secondary font-monospace">Daemon Settings</span>
+                            </div>
+                            <form class="settings-form">
+                                <div class="row g-3">
+                                    <div class="col-12 col-md-6">
+                                        <label class="form-label fw-semibold text-secondary small">Default Storage Purging Cycle</label>
+                                        <select class="form-select" id="retentionPolicy" required>
+                                            <option value="Keep latest 7 backups (Weekly cycle)">Keep latest 7 backups (Weekly cycle)</option>
+                                            <option value="Keep latest 15 backups">Keep latest 15 backups</option>
+                                            <option value="Keep latest 30 backups (Monthly cycle)">Keep latest 30 backups (Monthly cycle)</option>
+                                            <option value="Keep latest 90 backups">Keep latest 90 backups</option>
+                                            <option value="Archiving audit logs indefinitely (High-availability storage)">Archiving audit logs indefinitely (High-availability storage)</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-12 col-md-6">
+                                        <label class="form-label fw-semibold text-secondary small">Temporary Files Autoclear Interval</label>
+                                        <select class="form-select" id="tempPolicy" required>
+                                            <option value="Immediate delete upon verification">Immediate delete upon verification</option>
+                                            <option value="Retain temp files for 24 hours">Retain temp files for 24 hours</option>
+                                            <option value="Retain temp files for 7 days">Retain temp files for 7 days</option>
+                                        </select>
+                                    </div>
+                                    
+                                    <div class="col-12 pt-3">
+                                        <div class="form-check form-switch bg-light border p-3 rounded">
+                                            <input class="form-check-input ms-0 me-3" type="checkbox" id="compressToggle" checked>
+                                            <label class="form-check-label fw-semibold text-secondary small" for="compressToggle">
+                                                <i class="fas fa-file-archive me-1 text-primary"></i> Enable Automatic Gzip Compression (Ratio 4.1x average)
+                                            </label>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-12 border-top pt-4 text-end">
+                                        <button type="submit" class="btn btn-maroon px-4 fw-bold">Save Storage Policies</button>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+
+                    <!-- 5. Theme Preferences Tab -->
+                    <div class="tab-pane fade" id="tab-theme" role="tabpanel">
+                        <div class="custom-card">
+                            <div class="card-title-bar">
+                                <h5><i class="fas fa-palette text-primary"></i>Visual Theme Preferences</h5>
+                                <span class="badge bg-secondary font-monospace">Branding Options</span>
+                            </div>
+                            <form class="settings-form">
+                                <div class="row g-3">
+                                    <div class="col-12 col-md-6">
+                                        <label class="form-label fw-semibold text-secondary small">Select Branding Theme</label>
+                                        <select class="form-select" id="brandingThemeSelect">
+                                            <option value="classic">Indian Railways Classic (Railway Blue)</option>
+                                            <option value="maroon">Deep Administrative Maroon</option>
+                                            <option value="NIC">NIC Government Slate Gray</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-12 col-md-6">
+                                        <label class="form-label fw-semibold text-secondary small">Theme Mode</label>
+                                        <select class="form-select" id="themeModeSelect">
+                                            <option value="light">Light Enterprise Mode</option>
+                                            <option value="dark">Dark Control Room Mode</option>
+                                        </select>
+                                    </div>
+
+                                    <div class="col-12 border-top pt-4 text-end">
+                                        <button type="button" class="btn btn-maroon px-4 fw-bold" id="btnSaveBranding">Save Visual Preferences</button>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+
+                    <!-- 6. System Telemetry Intervals Tab -->
+                    <div class="tab-pane fade" id="tab-sys" role="tabpanel">
+                        <div class="custom-card">
+                            <div class="card-title-bar">
+                                <h5><i class="fas fa-sliders-h text-primary"></i>Telemetry Refresh Settings</h5>
+                                <span class="badge bg-secondary font-monospace">Daemon Freq</span>
+                            </div>
+                            <form class="settings-form">
+                                <div class="row g-3">
+                                    <div class="col-12 col-md-6">
+                                        <label class="form-label fw-semibold text-secondary small">Active Ping Availability Interval</label>
+                                        <select class="form-select" id="pingInterval" required>
+                                            <option value="Every 5 Seconds (Real-time telemetry)">Every 5 Seconds (Real-time telemetry)</option>
+                                            <option value="Every 30 Seconds (Recommended)">Every 30 Seconds (Recommended)</option>
+                                            <option value="Every 5 Minutes (Standard)">Every 5 Minutes (Standard)</option>
+                                            <option value="Every 30 Minutes (Intranet bandwidth saver)">Every 30 Minutes (Intranet bandwidth saver)</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-12 col-md-6">
+                                        <label class="form-label fw-semibold text-secondary small">Storage Diagnostics Audit Frequency</label>
+                                        <select class="form-select" id="diagnosticInterval" required>
+                                            <option value="Hourly diagnostics execution">Hourly diagnostics execution</option>
+                                            <option value="Daily diagnostics check">Daily diagnostics check</option>
+                                            <option value="Weekly system audit logs run">Weekly system audit logs run</option>
+                                        </select>
+                                    </div>
+
+                                    <div class="col-12 border-top pt-4 text-end">
+                                        <button type="submit" class="btn btn-maroon px-4 fw-bold">Update Intervals</button>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer Component -->
+    <footer>
+        <div class="container-fluid px-4">
+            <div class="row align-items-center">
+                <div class="col-md-6 text-center text-md-start">
+                    <h6 class="mb-1 text-white fw-bold">Database Backup Monitoring System &copy; 2026</h6>
+                    <p class="mb-0 text-white-50" style="font-size: 0.75rem;">Designed & Optimized for Government Enterprise Infrastructure Management</p>
+                </div>
+                <div class="col-md-6 text-center text-md-end mt-3 mt-md-0">
+                    <span class="badge bg-secondary py-2 px-3 me-2">Version 1.0</span>
+                    <span class="badge bg-dark py-2 px-3 text-warning font-monospace"><i class="fas fa-shield-alt me-1"></i>NIC Standard Level-4 Sec</span>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Bootstrap Bundle JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- Core Application Logic -->
+    <script src="../js/app.js"></script>
+
+    <script>
+        const loggedUser = localStorage.getItem("loggedUser");
+
+if (!loggedUser) {
+    alert("Please login first");
+    window.location.href = "login.html";
+}
+        document.addEventListener("DOMContentLoaded", () => {
+        const user = JSON.parse(localStorage.getItem("loggedUser") || "null");
+        const savedSettings = JSON.parse(localStorage.getItem("bms_settings") || "null") || {};
+
+        const defaultSettings = {
+            employeeReferenceId: user?.id ? `USER-${String(user.id).padStart(4, "0")}` : "N/A",
+            mobileNumber: user?.phone || "",
+            smtpHost: user?.email ? `smtp.${(user.email.split("@")[1] || "mail.local")}` : "localhost",
+            smtpPort: 587,
+            smtpProtocol: "STARTTLS (Recommended)",
+            senderDisplayName: user?.username ? `${user.username} Backup Monitor` : "Backup Monitor",
+            smsApiUrl: user?.email ? `https://sms.${(user.email.split("@")[1] || "local")}/api` : "https://sms.local/api",
+            smsSenderId: user?.username ? user.username.slice(0, 6).toUpperCase() : "BMS",
+            smsApiSecret: user?.password ? "••••••••" : "",
+            retentionPolicy: "Keep latest 30 backups (Monthly cycle)",
+            tempPolicy: "Retain temp files for 24 hours",
+            pingInterval: "Every 30 Seconds (Recommended)",
+            diagnosticInterval: "Hourly diagnostics execution"
+        };
+
+        const settings = { ...defaultSettings, ...savedSettings };
+
+if (user) {
+
+    const navbarUsername =
+        document.getElementById("navbarUsername");
+
+    const profileUsername =
+        document.getElementById("profileUsername");
+
+    const profileEmail =
+        document.getElementById("profileEmail");
+
+    if (navbarUsername)
+        navbarUsername.textContent = user.username;
+
+    if (profileUsername)
+        profileUsername.value = user.username;
+
+    if (profileEmail)
+        profileEmail.value = user.email;
+}
+
+            document.getElementById("employeeReferenceId").value = settings.employeeReferenceId;
+            document.getElementById("mobileNumber").value = settings.mobileNumber;
+            document.getElementById("smtpHost").value = settings.smtpHost;
+            document.getElementById("smtpPort").value = settings.smtpPort;
+            document.getElementById("smtpProtocol").value = settings.smtpProtocol;
+            document.getElementById("senderDisplayName").value = settings.senderDisplayName;
+            document.getElementById("smsApiUrl").value = settings.smsApiUrl;
+            document.getElementById("smsSenderId").value = settings.smsSenderId;
+            document.getElementById("smsApiSecret").value = settings.smsApiSecret;
+            document.getElementById("retentionPolicy").value = settings.retentionPolicy;
+            document.getElementById("tempPolicy").value = settings.tempPolicy;
+            document.getElementById("pingInterval").value = settings.pingInterval;
+            document.getElementById("diagnosticInterval").value = settings.diagnosticInterval;
+            const forms = document.querySelectorAll(".settings-form");
+            
+            // Handle save settings for all forms
+            forms.forEach(f => {
+                f.addEventListener("submit", (e) => {
+                    e.preventDefault();
+                    const updatedSettings = {
+                        employeeReferenceId: document.getElementById("employeeReferenceId").value,
+                        mobileNumber: document.getElementById("mobileNumber").value,
+                        smtpHost: document.getElementById("smtpHost").value,
+                        smtpPort: document.getElementById("smtpPort").value,
+                        smtpProtocol: document.getElementById("smtpProtocol").value,
+                        senderDisplayName: document.getElementById("senderDisplayName").value,
+                        smsApiUrl: document.getElementById("smsApiUrl").value,
+                        smsSenderId: document.getElementById("smsSenderId").value,
+                        smsApiSecret: document.getElementById("smsApiSecret").value,
+                        retentionPolicy: document.getElementById("retentionPolicy").value,
+                        tempPolicy: document.getElementById("tempPolicy").value,
+                        pingInterval: document.getElementById("pingInterval").value,
+                        diagnosticInterval: document.getElementById("diagnosticInterval").value
+                    };
+                    localStorage.setItem("bms_settings", JSON.stringify(updatedSettings));
+                    showToast("Settings Updated Successfully", "All administrative specifications written to terminal config registry.", "success");
+                });
+            });
+
+            // SMTP test mail trigger
+            const btnMail = document.getElementById("btnTestMail");
+            const mailSpinner = document.getElementById("mailSpinner");
+            btnMail.addEventListener("click", () => {
+                btnMail.disabled = true;
+                mailSpinner.style.display = "inline-block";
+
+                setTimeout(() => {
+                    btnMail.disabled = false;
+                    mailSpinner.style.display = "none";
+                    showToast("Test Email Dispatched", `Relay verification message delivered to '${document.getElementById("profileEmail").value || "your email"}'.`, "success");
+                }, 1000);
+            });
+
+            // SMS test message trigger
+            const btnSms = document.getElementById("btnTestSms");
+            const smsSpinner = document.getElementById("smsSpinner");
+            btnSms.addEventListener("click", () => {
+                btnSms.disabled = true;
+                smsSpinner.style.display = "inline-block";
+
+                setTimeout(() => {
+                    btnSms.disabled = false;
+                    smsSpinner.style.display = "none";
+                    showToast("Test SMS Sent", `Intranet SMS verification handshake ping successful for ${document.getElementById("smsSenderId").value || "the configured sender"}.`, "success");
+                }, 1000);
+            });
+
+            // Synchronize visual mode selects with global controls
+            const brandingTheme = document.getElementById("brandingThemeSelect");
+            const themeMode = document.getElementById("themeModeSelect");
+            const btnBranding = document.getElementById("btnSaveBranding");
+
+            // Prefill theme selects with current storage state
+            const currentTheme = localStorage.getItem("bms_theme") || "light";
+            themeMode.value = currentTheme;
+            if (brandingTheme) {
+                brandingTheme.value = localStorage.getItem("bms_branding_theme") || brandingTheme.value || "maroon";
+            }
+
+            btnBranding.addEventListener("click", () => {
+                const targetTheme = themeMode.value;
+                document.documentElement.setAttribute("data-theme", targetTheme);
+                localStorage.setItem("bms_theme", targetTheme);
+                if (brandingTheme) {
+                    localStorage.setItem("bms_branding_theme", brandingTheme.value);
+                }
+                updateThemeIcon(targetTheme);
+
+                showToast("Visual Preferences Saved", `Switched layout system theme to ${targetTheme === 'dark' ? 'Dark Control Room' : 'Light Enterprise'}.`, "success");
+            });
+        });
+
+        const logoutBtn = document.getElementById("logoutBtn");
+
+if (logoutBtn) {
+    logoutBtn.addEventListener("click", () => {
+        localStorage.removeItem("loggedUser");
+        window.location.href = "login.html";
+    });
+}
+    </script>
+</body>
+</html>

@@ -1,0 +1,745 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Configure Backup - Database Backup Monitoring System</title>
+    <meta name="description" content="Configure and automate scheduled database backups for all registered instances.">
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome Icons -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <!-- Custom Style Sheet -->
+    <link href="../css/style.css" rel="stylesheet">
+
+    <style>
+        .schedule-status-active {
+            background: linear-gradient(135deg, #d4edda, #c3e6cb);
+            color: #155724;
+            border: 1px solid #b8dacc;
+        }
+        .schedule-status-paused {
+            background: linear-gradient(135deg, #fff3cd, #ffeeba);
+            color: #856404;
+            border: 1px solid #ffc107;
+        }
+        .cron-preview {
+            background: #1a1a2e;
+            color: #00d4aa;
+            border-radius: 6px;
+            padding: 8px 14px;
+            font-family: 'Courier New', monospace;
+            font-size: 0.82rem;
+            letter-spacing: 0.5px;
+            border: 1px solid #00d4aa33;
+        }
+        .schedule-table th {
+            font-size: 0.72rem;
+            letter-spacing: 0.8px;
+            text-transform: uppercase;
+            color: #6c757d;
+            font-weight: 600;
+            border-bottom: 2px solid #dee2e6;
+            padding: 10px 14px;
+        }
+        .schedule-table td {
+            padding: 12px 14px;
+            vertical-align: middle;
+            font-size: 0.85rem;
+        }
+        .schedule-table tr:hover td {
+            background-color: rgba(0,100,200,0.03);
+        }
+        .freq-badge {
+            font-size: 0.72rem;
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-weight: 600;
+        }
+        .freq-daily    { background: #e3f2fd; color: #1565c0; }
+        .freq-weekly   { background: #f3e5f5; color: #6a1b9a; }
+        .freq-monthly  { background: #e8f5e9; color: #2e7d32; }
+        .freq-hourly   { background: #fff8e1; color: #e65100; }
+        .empty-schedules {
+            padding: 48px 20px;
+            text-align: center;
+            color: #adb5bd;
+        }
+        .empty-schedules i { font-size: 3rem; margin-bottom: 12px; display: block; }
+        .action-btn { padding: 4px 10px; font-size: 0.78rem; }
+        .info-strip {
+            background: linear-gradient(135deg, #f0f4ff, #e8f0fe);
+            border-left: 3px solid #4361ee;
+            border-radius: 6px;
+            padding: 10px 16px;
+            font-size: 0.82rem;
+            color: #3d5a99;
+        }
+        .next-run-label {
+            font-size: 0.72rem;
+            color: #6c757d;
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Topbar Navigation -->
+    <nav class="topbar">
+        <a href="dashboard.html" class="topbar-brand">
+            <div class="d-inline-flex align-items-center justify-content-center bg-white"
+                style="width: 36px; height: 36px; border-radius: 6px;">
+                <i class="fas fa-train text-primary" style="font-size: 1.25rem;"></i>
+            </div>
+            <span>Database Backup Monitoring System</span>
+        </a>
+        <div class="topbar-actions">
+            <div class="topbar-icon" id="theme-toggle-btn" title="Toggle Theme mode">
+                <i class="fas fa-moon text-light"></i>
+            </div>
+            <a href="notifications.html" class="topbar-icon text-decoration-none" title="View active notifications">
+                <i class="fas fa-bell"></i>
+                <span class="badge rounded-pill bg-danger notification-count-badge">5</span>
+            </a>
+            <div class="dropdown">
+                <div class="user-profile-btn" data-bs-toggle="dropdown" aria-expanded="false">
+                    <img src="https://cdn-icons-png.flaticon.com/512/3135/3135715.png" alt="User Image"
+                        style="width:40px;height:40px;border-radius:50%;object-fit:cover;">
+                    <span class="d-none d-sm-inline">admin</span>
+                    <i class="fas fa-chevron-down ms-1" style="font-size: 0.75rem;"></i>
+                </div>
+                <ul class="dropdown-menu dropdown-menu-end shadow-sm border-0 mt-2">
+                    <li><a class="dropdown-item" href="settings.html"><i class="fas fa-user-cog me-2 text-secondary"></i>My Profile</a></li>
+                    <li><a class="dropdown-item" href="settings.html"><i class="fas fa-cog me-2 text-secondary"></i>System Settings</a></li>
+                    <li><hr class="dropdown-divider"></li>
+                    <li><a class="dropdown-item text-danger" href="#" id="logoutBtn"><i class="fas fa-sign-out-alt me-2"></i>Sign Out</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Sidebar -->
+    <aside class="sidebar">
+        <div class="sidebar-section-title">Main Control</div>
+        <ul class="sidebar-menu">
+            <li class="sidebar-item"><a href="dashboard.html" class="sidebar-link"><i class="fas fa-tachometer-alt"></i><span>Dashboard</span></a></li>
+            <li class="sidebar-item"><a href="instances.html" class="sidebar-link"><i class="fas fa-server"></i><span>Instances</span></a></li>
+            <li class="sidebar-item"><a href="add-instance.html" class="sidebar-link"><i class="fas fa-plus-circle"></i><span>Add New Instance</span></a></li>
+            <li class="sidebar-item active"><a href="configure-backup.html" class="sidebar-link"><i class="fas fa-calendar-alt"></i><span>Configure Backup</span></a></li>
+            <li class="sidebar-item"><a href="backup-now.html" class="sidebar-link"><i class="fas fa-play-circle"></i><span>Backup Now</span></a></li>
+            <li class="sidebar-item"><a href="backup-history.html" class="sidebar-link"><i class="fas fa-history"></i><span>Backup History</span></a></li>
+            <li class="sidebar-item"><a href="reports.html" class="sidebar-link"><i class="fas fa-chart-bar"></i><span>Reports</span></a></li>
+            <li class="sidebar-item"><a href="notifications.html" class="sidebar-link"><i class="fas fa-bell"></i><span>Notifications</span></a></li>
+            <li class="sidebar-item"><a href="settings.html" class="sidebar-link"><i class="fas fa-sliders-h"></i><span>Settings</span></a></li>
+            <li class="sidebar-item mt-4 border-top border-light border-opacity-10 pt-3">
+                <a href="login.html" class="sidebar-link text-danger-hover"><i class="fas fa-sign-out-alt"></i><span>Logout</span></a>
+            </li>
+        </ul>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="main-wrapper page-transition">
+
+        <!-- Page Header -->
+        <div class="mb-4 d-flex align-items-start justify-content-between flex-wrap gap-2">
+            <div>
+                <h4 class="mb-1 fw-bold text-primary"><i class="fas fa-calendar-alt me-2"></i>Configure & Schedule Backups</h4>
+                <p class="text-muted mb-0" style="font-size: 0.88rem;">Create automated scheduled backup tasks for database instances. All schedules run as live server-side cron jobs.</p>
+            </div>
+            <div class="d-flex align-items-center gap-2">
+                <span class="badge bg-success py-2 px-3 font-monospace">
+                    <i class="fas fa-circle me-1" style="font-size: 0.55rem; animation: pulse 1.5s infinite;"></i>
+                    Cron Daemon Online
+                </span>
+            </div>
+        </div>
+
+        <div class="row g-4">
+
+            <!-- ============ LEFT: Configuration Form ============ -->
+            <div class="col-12 col-lg-7">
+                <div class="custom-card">
+                    <div class="card-title-bar">
+                        <h5><i class="fas fa-cog text-primary"></i>New Schedule Configuration</h5>
+                        <span class="badge bg-secondary font-monospace"><i class="fas fa-clock me-1"></i>Live Cron Registration</span>
+                    </div>
+
+                    <form id="schedulerForm" novalidate>
+                        <div class="row g-3">
+
+                            <!-- Select Instance -->
+                            <div class="col-12 col-md-6">
+                                <label for="schedInstance" class="form-label fw-semibold text-secondary small">Target Database Instance <span class="text-danger">*</span></label>
+                                <select class="form-select" id="schedInstance" required>
+                                    <option value="" disabled selected>Loading instances...</option>
+                                </select>
+                                <div class="form-text">Only MySQL instances support live mysqldump.</div>
+                            </div>
+
+                            <!-- DB Engine Readonly -->
+                            <div class="col-12 col-md-6">
+                                <label for="schedType" class="form-label fw-semibold text-secondary small">RDBMS Engine</label>
+                                <input type="text" class="form-control bg-light font-monospace" id="schedType" readonly placeholder="Auto-filled on selection...">
+                            </div>
+
+                            <!-- Frequency -->
+                            <div class="col-12 col-md-6">
+                                <label for="schedFrequency" class="form-label fw-semibold text-secondary small">Backup Frequency <span class="text-danger">*</span></label>
+                                <select class="form-select" id="schedFrequency" required>
+                                    <option value="Daily" selected>Daily</option>
+                                    <option value="Weekly">Weekly (Every Sunday)</option>
+                                    <option value="Monthly">Monthly (1st of month)</option>
+                                    <option value="Hourly">Hourly</option>
+                                </select>
+                            </div>
+
+                            <!-- Backup Time -->
+                            <div class="col-12 col-md-6">
+                                <label for="schedTime" class="form-label fw-semibold text-secondary small">Execution Time <span class="text-danger">*</span></label>
+                                <input type="time" class="form-control font-monospace" id="schedTime" value="02:00" required>
+                                <div class="form-text">Recommended: 02:00–05:00 AM (off-peak hours)</div>
+                            </div>
+
+                            <!-- Cron Expression Preview -->
+                            <div class="col-12">
+                                <div class="cron-preview d-flex align-items-center gap-3">
+                                    <i class="fas fa-terminal text-success"></i>
+                                    <div>
+                                        <div style="font-size: 0.7rem; color: #aaa; margin-bottom: 2px;">CRON EXPRESSION PREVIEW</div>
+                                        <span id="cronPreviewText">0 2 * * *</span>
+                                        &nbsp;—&nbsp;
+                                        <span id="cronPreviewDesc" style="color: #fff;">Every day at 02:00 AM</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Start Date -->
+                            <div class="col-12 col-md-6">
+                                <label for="schedDate" class="form-label fw-semibold text-secondary small">Schedule Start Date <span class="text-danger">*</span></label>
+                                <input type="date" class="form-control font-monospace" id="schedDate" required>
+                            </div>
+
+                            <!-- Storage Destination -->
+                            <div class="col-12 col-md-6">
+                                <label for="schedLocation" class="form-label fw-semibold text-secondary small">Storage Destination</label>
+                                <select class="form-select" id="schedLocation">
+                                    <option value="Local Drive">Local Drive Share (NIC Partition)</option>
+                                    <option value="Google Drive">Google Workspace Enterprise Drive</option>
+                                    <option value="File Server">Enterprise NFS File Server</option>
+                                </select>
+                            </div>
+
+                            <!-- Backup Path Override -->
+                            <div class="col-12 col-md-6">
+                                <label for="schedPath" class="form-label fw-semibold text-secondary small">Backup Directory Path Override</label>
+                                <input type="text" class="form-control font-monospace" id="schedPath"
+                                    placeholder="Leave blank to use instance default...">
+                                <div class="form-text">Overrides the instance's configured backup path.</div>
+                            </div>
+
+                            <!-- Retention Policy -->
+                            <div class="col-12 col-md-6">
+                                <label for="schedRetention" class="form-label fw-semibold text-secondary small">Retention Autopurge Policy</label>
+                                <select class="form-select" id="schedRetention">
+                                    <option value="7 Days">7 Days (Weekly Purge)</option>
+                                    <option value="15 Days">15 Days (Bi-weekly Purge)</option>
+                                    <option value="30 Days" selected>30 Days (Monthly Purge)</option>
+                                    <option value="90 Days">90 Days (Quarterly Purge)</option>
+                                    <option value="365 Days">365 Days (Annual Audit Retention)</option>
+                                </select>
+                            </div>
+
+
+
+                            <!-- Submit Buttons -->
+                            <div class="col-12 border-top pt-4 mt-2 d-flex justify-content-between align-items-center flex-wrap gap-2">
+                                <button type="button" class="btn btn-outline-secondary btn-sm" id="btnResetForm">
+                                    <i class="fas fa-redo me-1"></i> Reset Form
+                                </button>
+                                <div class="d-flex gap-2">
+                                    <button type="submit" class="btn btn-outline-primary" id="btnSaveConfig" data-mode="save">
+                                        <i class="fas fa-save me-1"></i> Save Config Only
+                                    </button>
+                                    <button type="submit" class="btn btn-maroon px-4 fw-bold" id="btnSchedule" data-mode="schedule">
+                                        <span id="scheduleSpinner" class="spinner-border spinner-border-sm me-2" style="display:none;"></span>
+                                        <i class="fas fa-robot me-1" id="scheduleIcon"></i> Schedule & Automate
+                                    </button>
+                                </div>
+                            </div>
+
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <!-- ============ RIGHT: Guidelines ============ -->
+            <div class="col-12 col-lg-5">
+                <div class="custom-card bg-primary bg-opacity-10 border-primary border-opacity-25 mb-4">
+                    <h6 class="fw-bold text-primary mb-3"><i class="fas fa-info-circle me-2"></i>Scheduling Guidelines</h6>
+                    <ul class="text-secondary small ps-3 mb-0" style="line-height: 2;">
+                        <li><strong>Off-Peak Hours:</strong> Schedule during 02:00–05:00 AM to avoid load on active databases.</li>
+                        <li><strong>MySQL Only:</strong> Live mysqldump works only for MySQL instances. Oracle instances require a custom dump agent.</li>
+                        <li><strong>Cron Jobs:</strong> Schedules run as server-side Node.js cron daemons — no external scheduler needed.</li>
+                        <li><strong>Auto-Logging:</strong> Every scheduled run is automatically logged in Backup History with size, duration, and MD5 hash.</li>
+                        <li><strong>Pause/Resume:</strong> Use the schedule table below to temporarily suspend a task without deleting it.</li>
+                    </ul>
+                </div>
+
+                <!-- Quick Stats -->
+                <div class="custom-card">
+                    <h6 class="fw-bold text-dark mb-3"><i class="fas fa-chart-pie me-2 text-primary"></i>Active Schedule Summary</h6>
+                    <div class="row g-3 text-center">
+                        <div class="col-4">
+                            <div class="fw-bold text-primary" style="font-size: 1.6rem;" id="statTotal">—</div>
+                            <div class="text-muted" style="font-size: 0.72rem;">TOTAL</div>
+                        </div>
+                        <div class="col-4">
+                            <div class="fw-bold text-success" style="font-size: 1.6rem;" id="statActive">—</div>
+                            <div class="text-muted" style="font-size: 0.72rem;">ACTIVE</div>
+                        </div>
+                        <div class="col-4">
+                            <div class="fw-bold text-warning" style="font-size: 1.6rem;" id="statPaused">—</div>
+                            <div class="text-muted" style="font-size: 0.72rem;">PAUSED</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- ============ SCHEDULE LIST TABLE ============ -->
+        <div class="custom-card mt-4">
+            <div class="card-title-bar">
+                <h5><i class="fas fa-list-alt text-primary"></i>All Configured Schedules</h5>
+                <button class="btn btn-outline-secondary btn-sm" id="btnRefreshSchedules" title="Refresh list">
+                    <i class="fas fa-sync-alt me-1"></i> Refresh
+                </button>
+            </div>
+
+            <!-- Loading state -->
+            <div id="scheduleLoadingState" class="text-center py-4">
+                <div class="spinner-border text-primary" role="status"></div>
+                <p class="text-muted mt-2 small">Loading schedules...</p>
+            </div>
+
+            <!-- Table -->
+            <div id="scheduleTableWrapper" style="display: none;">
+                <div class="table-responsive">
+                    <table class="table schedule-table mb-0">
+                        <thead>
+                            <tr>
+                                <th>Instance</th>
+                                <th>Engine</th>
+                                <th>Frequency</th>
+                                <th>Time</th>
+                                <th>Start Date</th>
+                                <th>Retention</th>
+                                <th>Status</th>
+                                <th class="text-end">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="scheduleTableBody">
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Empty state -->
+            <div id="scheduleEmptyState" style="display: none;" class="empty-schedules">
+                <i class="fas fa-calendar-times"></i>
+                <h6 class="text-muted">No schedules configured yet</h6>
+                <p class="small text-muted">Use the form above to set up your first automated backup schedule.</p>
+            </div>
+        </div>
+
+    </main>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container-fluid px-4">
+            <div class="row align-items-center">
+                <div class="col-md-6 text-center text-md-start">
+                    <h6 class="mb-1 text-white fw-bold">Database Backup Monitoring System &copy; 2026</h6>
+                    <p class="mb-0 text-white-50" style="font-size: 0.75rem;">Designed & Optimized for Government Enterprise Infrastructure Management</p>
+                </div>
+                <div class="col-md-6 text-center text-md-end mt-3 mt-md-0">
+                    <span class="badge bg-secondary py-2 px-3 me-2">Version 1.0</span>
+                    <span class="badge bg-dark py-2 px-3 text-warning font-monospace"><i class="fas fa-shield-alt me-1"></i>NIC Standard Level-4 Sec</span>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Bootstrap Bundle JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- Core Application Logic -->
+    <script src="../js/app.js"></script>
+
+    <script>
+        // Auth guard
+        const loggedUser = localStorage.getItem("loggedUser");
+        if (!loggedUser) {
+            alert("Please login first");
+            window.location.href = "login.html";
+        }
+
+        const API_BASE = "http://127.0.0.1:5000/api";
+
+        // ======= Cron Preview Builder =======
+        function buildCronExpression(frequency, timeStr) {
+            const parts = timeStr.split(":");
+            const hour = parseInt(parts[0], 10);
+            const minute = parseInt(parts[1], 10);
+            switch (frequency) {
+                case "Hourly":  return `${minute} * * * *`;
+                case "Daily":   return `${minute} ${hour} * * *`;
+                case "Weekly":  return `${minute} ${hour} * * 0`;
+                case "Monthly": return `${minute} ${hour} 1 * *`;
+                default:        return `${minute} ${hour} * * *`;
+            }
+        }
+
+        function buildCronDescription(frequency, timeStr) {
+            const parts = timeStr.split(":");
+            const hour = parseInt(parts[0], 10);
+            const min = parseInt(parts[1], 10);
+            const timeLabel = `${String(hour).padStart(2,"0")}:${String(min).padStart(2,"0")}`;
+            switch (frequency) {
+                case "Hourly":  return `Every hour at minute :${String(min).padStart(2,"0")}`;
+                case "Daily":   return `Every day at ${timeLabel}`;
+                case "Weekly":  return `Every Sunday at ${timeLabel}`;
+                case "Monthly": return `1st of every month at ${timeLabel}`;
+                default:        return `Every day at ${timeLabel}`;
+            }
+        }
+
+        function updateCronPreview() {
+            const freq = document.getElementById("schedFrequency").value;
+            const time = document.getElementById("schedTime").value || "02:00";
+            document.getElementById("cronPreviewText").textContent = buildCronExpression(freq, time);
+            document.getElementById("cronPreviewDesc").textContent = buildCronDescription(freq, time);
+        }
+
+        // ======= Frequency badge helper =======
+        function freqBadge(freq) {
+            const cls = { Daily: "freq-daily", Weekly: "freq-weekly", Monthly: "freq-monthly", Hourly: "freq-hourly" }[freq] || "freq-daily";
+            return `<span class="freq-badge ${cls}">${freq}</span>`;
+        }
+
+        // ======= Format time =======
+        function formatTime(timeStr) {
+            if (!timeStr) return "—";
+            const parts = timeStr.split(":");
+            const h = parseInt(parts[0]);
+            const m = parts[1];
+            const ampm = h >= 12 ? "PM" : "AM";
+            const h12 = h % 12 || 12;
+            return `${h12}:${m} ${ampm}`;
+        }
+
+        // ======= Load and render schedule table =======
+        async function loadSchedules() {
+            document.getElementById("scheduleLoadingState").style.display = "block";
+            document.getElementById("scheduleTableWrapper").style.display = "none";
+            document.getElementById("scheduleEmptyState").style.display = "none";
+
+            try {
+                const res = await fetch(`${API_BASE}/schedules`);
+                const schedules = await res.json();
+
+                const totalActive = schedules.filter(s => s.status === "Active").length;
+                const totalPaused = schedules.filter(s => s.status === "Paused").length;
+                document.getElementById("statTotal").textContent = schedules.length;
+                document.getElementById("statActive").textContent = totalActive;
+                document.getElementById("statPaused").textContent = totalPaused;
+
+                document.getElementById("scheduleLoadingState").style.display = "none";
+
+                if (schedules.length === 0) {
+                    document.getElementById("scheduleEmptyState").style.display = "block";
+                    return;
+                }
+
+                document.getElementById("scheduleTableWrapper").style.display = "block";
+
+                const tbody = document.getElementById("scheduleTableBody");
+                tbody.innerHTML = "";
+
+                schedules.forEach(s => {
+                    const statusBadge = s.status === "Active"
+                        ? `<span class="badge schedule-status-active px-2 py-1">&#9679; Active</span>`
+                        : `<span class="badge schedule-status-paused px-2 py-1">&#9646; Paused</span>`;
+
+                    const toggleBtn = s.status === "Active"
+                        ? `<button class="btn btn-sm btn-outline-warning action-btn me-1" onclick="toggleStatus(${s.id}, 'Paused')" title="Pause this schedule"><i class="fas fa-pause"></i></button>`
+                        : `<button class="btn btn-sm btn-outline-success action-btn me-1" onclick="toggleStatus(${s.id}, 'Active')" title="Resume this schedule"><i class="fas fa-play"></i></button>`;
+
+                    const startDateStr = s.start_date ? new Date(s.start_date).toLocaleDateString("en-IN") : "—";
+
+                    tbody.innerHTML += `
+                        <tr id="schedule-row-${s.id}">
+                            <td>
+                                <div class="fw-semibold text-dark">${s.instance_name}</div>
+                                <div class="text-muted font-monospace" style="font-size:0.72rem;">${s.ip}</div>
+                            </td>
+                            <td><span class="font-monospace text-secondary" style="font-size:0.8rem;">${s.db_type}</span></td>
+                            <td>${freqBadge(s.frequency)}</td>
+                            <td class="font-monospace fw-semibold">${formatTime(s.backup_time)}</td>
+                            <td>${startDateStr}</td>
+                            <td><span class="badge bg-light text-dark border">${s.retention_policy}</span></td>
+                            <td>${statusBadge}</td>
+                            <td class="text-end" style="white-space:nowrap;">
+                                <button class="btn btn-sm btn-success action-btn me-1" id="run-btn-${s.id}" onclick="runScheduleNow(${s.id}, '${s.instance_name}')" title="Run backup immediately now">
+                                    <i class="fas fa-bolt"></i> Run Now
+                                </button>
+                                ${toggleBtn}
+                                <button class="btn btn-sm btn-outline-danger action-btn" onclick="deleteSchedule(${s.id}, '${s.instance_name}')" title="Delete schedule">
+                                    <i class="fas fa-trash-alt"></i>
+                                </button>
+                            </td>
+                        </tr>
+                    `;
+                });
+
+            } catch (err) {
+                console.error("Failed to load schedules:", err);
+                document.getElementById("scheduleLoadingState").style.display = "none";
+                document.getElementById("scheduleEmptyState").style.display = "block";
+                document.getElementById("scheduleEmptyState").innerHTML = `
+                    <i class="fas fa-exclamation-triangle text-danger"></i>
+                    <h6 class="text-danger">Failed to load schedules</h6>
+                    <p class="small text-muted">Could not reach the backend API. Please check server status.</p>
+                `;
+            }
+        }
+
+        // ======= Toggle schedule status =======
+        async function toggleStatus(id, newStatus) {
+            try {
+                const res = await fetch(`${API_BASE}/schedules/${id}/status`, {
+                    method: "PATCH",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ status: newStatus })
+                });
+                const data = await res.json();
+                if (!res.ok) throw new Error(data.error || "Failed");
+
+                showToast(
+                    newStatus === "Active" ? "Schedule Resumed" : "Schedule Paused",
+                    data.message,
+                    newStatus === "Active" ? "success" : "warning"
+                );
+                loadSchedules();
+            } catch (err) {
+                showToast("Error", err.message, "danger");
+            }
+        }
+
+        // ======= Delete a schedule =======
+        async function deleteSchedule(id, instanceName) {
+            if (!confirm(`Are you sure you want to delete the schedule for '${instanceName}'?\nThe cron job will be stopped immediately.`)) return;
+
+            try {
+                const res = await fetch(`${API_BASE}/schedules/${id}`, { method: "DELETE" });
+                const data = await res.json();
+                if (!res.ok) throw new Error(data.error || "Failed to delete");
+
+                showToast("Schedule Deleted", `Backup schedule for '${instanceName}' has been removed.`, "danger");
+                loadSchedules();
+            } catch (err) {
+                showToast("Error", err.message, "danger");
+            }
+        }
+
+        // ======= Run Now — trigger an immediate backup for a schedule =======
+        async function runScheduleNow(id, instanceName) {
+            const btn = document.getElementById(`run-btn-${id}`);
+            if (!btn) return;
+
+            // Show spinner on button
+            const origHtml = btn.innerHTML;
+            btn.disabled = true;
+            btn.innerHTML = `<span class="spinner-border spinner-border-sm me-1"></span> Running...`;
+            btn.classList.remove("btn-success");
+            btn.classList.add("btn-secondary");
+
+            try {
+                const res = await fetch(`${API_BASE}/schedules/${id}/run-now`, { method: "POST" });
+                const data = await res.json();
+
+                // Restore button
+                btn.disabled = false;
+                btn.innerHTML = origHtml;
+                btn.classList.remove("btn-secondary");
+                btn.classList.add("btn-success");
+
+                if (!res.ok) {
+                    showToast("Backup Failed", data.error || data.message || "Unknown error", "danger");
+                    return;
+                }
+
+                // Success — show result details
+                const detail = `Size: ${data.backupSize} | Duration: ${data.duration} | MD5: ${data.fileHash}`;
+                showToast(
+                    `✅ Backup Complete — ${instanceName}`,
+                    detail,
+                    "success"
+                );
+
+                // Also refresh schedule list
+                loadSchedules();
+
+            } catch (err) {
+                btn.disabled = false;
+                btn.innerHTML = origHtml;
+                btn.classList.remove("btn-secondary");
+                btn.classList.add("btn-success");
+                showToast("Connection Error", err.message, "danger");
+            }
+        }
+
+        // ======= Main DOM-Ready Init =======
+        document.addEventListener("DOMContentLoaded", async () => {
+            const selectInst = document.getElementById("schedInstance");
+            const txtType    = document.getElementById("schedType");
+            const txtPath    = document.getElementById("schedPath");
+            const form       = document.getElementById("schedulerForm");
+
+            // Set today as default start date
+            const todayStr = new Date().toISOString().split("T")[0];
+            document.getElementById("schedDate").value = todayStr;
+
+            // Read potential instance ID from query string
+            const urlParams = new URLSearchParams(window.location.search);
+            const targetId = urlParams.get("id");
+
+            // ---- Populate Instance Dropdown ----
+            const instances = await getInstancesFromServer();
+            selectInst.innerHTML = `<option value="" disabled ${!targetId ? "selected" : ""}>Choose target database instance...</option>`;
+            instances.forEach(ins => {
+                const sel = ins.id === targetId ? "selected" : "";
+                selectInst.innerHTML += `<option value="${ins.id}" data-type="${ins.type}" data-location="${ins.backupLocation}" ${sel}>${ins.name} (${ins.ip})</option>`;
+            });
+
+            // Auto-fill if pre-selected
+            if (targetId) {
+                const activeIns = instances.find(i => i.id === targetId);
+                if (activeIns) {
+                    txtType.value = activeIns.type;
+                    // Don't override path — let user fill it
+                }
+            }
+
+            // ---- Instance change handler ----
+            selectInst.addEventListener("change", () => {
+                const opt = selectInst.options[selectInst.selectedIndex];
+                txtType.value = opt.getAttribute("data-type") || "";
+            });
+
+            // ---- Cron Preview listeners ----
+            document.getElementById("schedFrequency").addEventListener("change", updateCronPreview);
+            document.getElementById("schedTime").addEventListener("input", updateCronPreview);
+            updateCronPreview();
+
+            // ---- Reset button ----
+            document.getElementById("btnResetForm").addEventListener("click", () => {
+                form.reset();
+                document.getElementById("schedDate").value = todayStr;
+                updateCronPreview();
+                selectInst.value = "";
+                txtType.value = "";
+            });
+
+            // ---- Refresh button ----
+            document.getElementById("btnRefreshSchedules").addEventListener("click", loadSchedules);
+
+            // ---- Form Submit ----
+            form.addEventListener("submit", async (e) => {
+                e.preventDefault();
+
+                const instanceId = selectInst.value;
+                if (!instanceId) {
+                    showToast("Validation Error", "Please select a target database instance.", "danger");
+                    return;
+                }
+
+                const frequency  = document.getElementById("schedFrequency").value;
+                const backupTime = document.getElementById("schedTime").value + ":00";
+                const startDate  = document.getElementById("schedDate").value;
+                const storage    = document.getElementById("schedLocation").value;
+                const path       = document.getElementById("schedPath").value.trim();
+                const retention  = document.getElementById("schedRetention").value;
+                if (!startDate) {
+                    showToast("Validation Error", "Please set a schedule start date.", "danger");
+                    return;
+                }
+
+                // Show spinner
+                const spinner = document.getElementById("scheduleSpinner");
+                const icon    = document.getElementById("scheduleIcon");
+                const btn     = document.getElementById("btnSchedule");
+                spinner.style.display = "inline-block";
+                icon.style.display = "none";
+                btn.disabled = true;
+
+                try {
+                    const payload = {
+                        instance_id:          parseInt(instanceId),
+                        frequency,
+                        backup_time:          backupTime,
+                        start_date:           startDate,
+                        storage_destination:  storage,
+                        backup_path:          path || null,
+                        retention_policy:     retention,
+                        email_alert:          false,
+                        sms_alert:            false
+                    };
+
+                    const res = await fetch(`${API_BASE}/schedules`, {
+                        method: "POST",
+                        headers: { "Content-Type": "application/json" },
+                        body: JSON.stringify(payload)
+                    });
+                    const data = await res.json();
+
+                    if (!res.ok) throw new Error(data.error || "Server error");
+
+                    const instName = selectInst.options[selectInst.selectedIndex].text.split(" (")[0];
+                    showToast(
+                        "Schedule Activated!",
+                        `Cron daemon registered for '${instName}' — ${frequency} at ${document.getElementById("schedTime").value}.`,
+                        "success"
+                    );
+
+                    form.reset();
+                    document.getElementById("schedDate").value = todayStr;
+                    updateCronPreview();
+                    txtType.value = "";
+                    await loadSchedules();
+
+                } catch (err) {
+                    console.error("Schedule save error:", err);
+                    showToast("Failed to Schedule", err.message || "Could not connect to backend.", "danger");
+                } finally {
+                    spinner.style.display = "none";
+                    icon.style.display = "inline-block";
+                    btn.disabled = false;
+                }
+            });
+
+            // ---- Load schedules on init ----
+            loadSchedules();
+        });
+
+        // ---- Logout ----
+        const logoutBtn = document.getElementById("logoutBtn");
+        if (logoutBtn) {
+            logoutBtn.addEventListener("click", () => {
+                localStorage.removeItem("loggedUser");
+                window.location.href = "login.html";
+            });
+        }
+    </script>
+</body>
+
+</html>
