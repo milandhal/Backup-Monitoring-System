@@ -168,10 +168,7 @@ This repository includes a `vercel.json` file optimized for Vercel Serverless Fu
 
 ---
 
-## 🤝 Contributing
+## Author
 
-Contributions are welcome! Please feel free to submit a Pull Request or open an Issue for bug reports and feature enhancements.
+Milan Dhal
 
-## 📄 License
-
-This project is licensed under the [ISC License](LICENSE).
