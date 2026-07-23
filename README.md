@@ -6,19 +6,71 @@
 [![JavaScript](https://img.shields.io/badge/JavaScript-ES6%2B-yellow.svg)](https://developer.mozilla.org/en-US/docs/Web/JavaScript)
 [![License](https://img.shields.io/badge/License-ISC-brightgreen.svg)](LICENSE)
 
-An enterprise-grade **Database Backup Monitoring & Management System (BMS)** designed for mission-critical database environments (Oracle, MySQL, PostgreSQL, MS SQL). Provides centralized real-time monitoring, automated cron-based backup scheduling, instant manual backup triggers, and detailed system audit reporting.
+An enterprise-grade **Database Backup Monitoring & Management System (BMS)** designed for mission-critical database environments (Oracle, MySQL, PostgreSQL, MS SQL). The system provides centralized real-time monitoring, automated cron-based backup scheduling, instant manual backup execution, comprehensive audit reporting, and secure management of database backup operations from a single dashboard.
+
+---
+
+## 🎥 Demo Video
+
+Watch the complete working demonstration of the project here:
+
+▶️ **Project Demo:**  
+https://drive.google.com/file/d/1wsdVdKZs5wq39RMFAsrHxaMk0B9-5Xuz/view?usp=drive_link
+
+The demo covers:
+
+- 🔐 User Authentication
+- 🖥️ Dashboard Overview
+- 📊 Database Instance Monitoring
+- ➕ Add Database Instance
+- 💾 Manual Backup Execution
+- ⏰ Automated Backup Scheduling
+- 📜 Backup History
+- 📈 Dashboard Analytics
+- ☁️ Deployment Overview
 
 ---
 
 ## 🌟 Key Features
 
-- 🖥️ **Centralized Dashboard**: Real-time status monitoring of database instances, connection health, backup sizes, and last downtime timestamps.
-- ⏱️ **Automated Cron Scheduler**: Integrated backup scheduler powered by `node-cron` to execute periodic database dumps without manual intervention.
-- ⚡ **Instant Manual Backups**: Execute manual database backups on-demand with instant execution logs and timestamped backup artifact generation.
-- 📊 **Analytics & Reporting**: Complete history of backup durations, file sizes, storage locations, and success/failure logs.
-- 🔌 **Multi-Database Support**: Infrastructure setup prepared for heterogeneous database environments (Oracle, MySQL, PostgreSQL).
-- 🔐 **Authentication & Security**: Secure user login, session management, and environment credential protection.
-- ☁️ **Serverless & Cloud Ready**: Pre-configured with connection pooling and routing for seamless deployment on platforms like Vercel and cloud database hosts.
+- 🖥️ **Centralized Dashboard**
+  - Monitor all database instances from a single interface.
+  - Real-time database health monitoring.
+  - View backup status, storage usage, and connection information.
+
+- ⏱️ **Automated Backup Scheduling**
+  - Cron-based scheduler using **node-cron**.
+  - Configure periodic backups.
+  - Automatic execution without manual intervention.
+
+- ⚡ **Manual Backup Execution**
+  - Trigger backups instantly.
+  - Generate timestamped backup files.
+  - Real-time execution logs.
+
+- 📊 **Backup Analytics & Reports**
+  - Backup history.
+  - Backup duration.
+  - Backup size.
+  - Success/Failure reports.
+  - Storage location tracking.
+
+- 🔌 **Multi-Database Ready**
+  - Oracle
+  - MySQL
+  - PostgreSQL
+  - Microsoft SQL Server
+
+- 🔐 **Authentication & Security**
+  - Secure login system.
+  - Protected API routes.
+  - Environment-based credential management.
+
+- ☁️ **Cloud Ready**
+  - Vercel Deployment
+  - Cloud MySQL Support
+  - Connection Pooling
+  - Serverless APIs
 
 ---
 
@@ -26,149 +78,293 @@ An enterprise-grade **Database Backup Monitoring & Management System (BMS)** des
 
 ```mermaid
 flowchart TD
-    Client["🌐 Frontend Client (HTML5 / Vanilla CSS / JS)"] -->|REST API Requests| API["🚀 Node.js / Express Server"]
-    API -->|Connection Pool| DB[("🗄️ MySQL Database (bms.sql)")]
-    API -->|Cron Jobs| Scheduler["⏰ Backup Scheduler (node-cron)"]
-    Scheduler -->|Execute Dump| Runner["💾 Backup Runner / Storage Engine"]
-    Runner -->|Write File| Storage[("📁 Local / NFS / Cloud Storage")]
+    Client["🌐 Frontend Client (HTML5 / CSS3 / JavaScript)"] -->|REST API| API["🚀 Node.js + Express.js"]
+    API -->|Connection Pool| DB[("🗄️ MySQL Database")]
+    API --> Scheduler["⏰ node-cron Scheduler"]
+    Scheduler --> Runner["💾 Backup Engine"]
+    Runner --> Storage[("📁 Backup Storage")]
 ```
 
 ---
 
-## 🛠️ Technology Stack
+# 🛠️ Technology Stack
 
 | Layer | Technologies |
-| :--- | :--- |
-| **Frontend** | Vanilla HTML5, Custom CSS3 (Glassmorphism & Responsive Grid), JavaScript (ES6+) |
-| **Backend** | Node.js, Express.js (v5), `node-cron`, `cors`, `dotenv` |
-| **Database** | MySQL 8.0, `mysql2` (Connection Pooling enabled) |
-| **Deployment** | Vercel Serverless Functions (`@vercel/node`), Cloud MySQL (Aiven / TiDB / Railway) |
+|--------|--------------|
+| **Frontend** | HTML5, CSS3, JavaScript (ES6+) |
+| **Backend** | Node.js, Express.js |
+| **Database** | MySQL 8.0, mysql2 |
+| **Scheduling** | node-cron |
+| **Deployment** | Vercel |
+| **Environment** | dotenv |
+| **Middleware** | cors, express.json() |
 
 ---
 
-## 📁 Repository Structure
+# 📁 Repository Structure
 
 ```text
 Backup-Monitoring-System/
+│
 ├── backend/
 │   ├── config/
-│   │   └── db.js               # MySQL Connection Pool configuration
-│   ├── controllers/            # Route handler logic (auth, backups, instances, etc.)
-│   ├── routes/                 # Express API endpoints
+│   │   └── db.js
+│   │
+│   ├── controllers/
+│   │   ├── authController.js
+│   │   ├── backupController.js
+│   │   ├── dashboardController.js
+│   │   ├── instanceController.js
+│   │   └── scheduleController.js
+│   │
+│   ├── routes/
+│   │   ├── authRoutes.js
+│   │   ├── backupRoutes.js
+│   │   ├── dashboardRoutes.js
+│   │   ├── instanceRoutes.js
+│   │   └── scheduleRoutes.js
+│   │
 │   ├── services/
-│   │   ├── backupRunner.js     # Manual & scheduled backup execution engine
-│   │   └── backupScheduler.js  # Node-cron scheduler initialization
-│   ├── .env                    # Environment variables configuration
-│   ├── package.json            # Node.js dependencies and scripts
-│   └── server.js               # Express application entry point & Serverless export
+│   │   ├── backupRunner.js
+│   │   └── backupScheduler.js
+│   │
+│   ├── package.json
+│   ├── server.js
+│   └── .env
+│
 ├── css/
-│   └── style.css               # Core styling tokens & UI component CSS
+│   └── style.css
+│
 ├── html/
-│   ├── index.html              # Main Landing / Dashboard Overview
-│   ├── dashboard.html          # Detailed Instance Monitoring Matrix
-│   ├── instances.html          # Managed Database Instances List
-│   ├── add-instance.html      # Add New Database Instance Form
-│   ├── backup-history.html     # Historical Backup Audit Log
-│   ├── backup-now.html        # Manual Backup Execution Trigger
-│   ├── configure-backup.html   # Automated Backup Schedule Manager
-│   └── login.html              # System User Authentication
+│   ├── login.html
+│   ├── dashboard.html
+│   ├── index.html
+│   ├── instances.html
+│   ├── add-instance.html
+│   ├── backup-history.html
+│   ├── backup-now.html
+│   └── configure-backup.html
+│
 ├── js/
-│   └── app.js                  # Frontend State Management & API Sync Engine
-├── bms.sql                     # Database Schema Dump & Sample Records
-├── vercel.json                 # Vercel Deployment & Route Rewrites Configuration
-└── README.md                   # System Documentation
+│   └── app.js
+│
+├── bms.sql
+├── vercel.json
+└── README.md
 ```
 
 ---
 
-## 🚀 REST API Endpoints
+# 🚀 REST API Endpoints
 
-### 🔑 Authentication
-| Method | Endpoint | Description |
-| :--- | :--- | :--- |
-| `POST` | `/api/login` | Authenticate user credentials |
+## 🔑 Authentication
 
-### 🖥️ Database Instances
 | Method | Endpoint | Description |
-| :--- | :--- | :--- |
-| `GET` | `/api/instances` | Fetch all registered database instances |
-| `POST` | `/api/instances` | Register a new database instance |
-| `GET` | `/api/instances/:id` | Get instance details by ID |
-| `DELETE` | `/api/instances/:id` | Remove a database instance |
-
-### 💾 Backup Management
-| Method | Endpoint | Description |
-| :--- | :--- | :--- |
-| `GET` | `/api/backups` | Retrieve complete backup audit history |
-| `POST` | `/api/backups/run` | Trigger immediate manual backup |
-
-### ⏰ Scheduling & Dashboard
-| Method | Endpoint | Description |
-| :--- | :--- | :--- |
-| `GET` | `/api/dashboard/stats` | Retrieve aggregate system health & backup metrics |
-| `GET` | `/api/schedules` | Get active automated backup schedules |
-| `POST` | `/api/schedules` | Create or update a backup cron schedule |
+|---------|----------|-------------|
+| POST | `/api/login` | User Login |
 
 ---
 
-## 💻 Local Setup & Installation
+## 🖥️ Database Instances
 
-### Prerequisites
-- [Node.js](https://nodejs.org/) (v18.x or higher)
-- [MySQL Server](https://dev.mysql.com/downloads/mysql/) (v8.0 or higher)
+| Method | Endpoint | Description |
+|---------|----------|-------------|
+| GET | `/api/instances` | Get All Instances |
+| POST | `/api/instances` | Add New Instance |
+| GET | `/api/instances/:id` | Get Instance |
+| DELETE | `/api/instances/:id` | Delete Instance |
 
-### 1. Clone the Repository
+---
+
+## 💾 Backup Management
+
+| Method | Endpoint | Description |
+|---------|----------|-------------|
+| GET | `/api/backups` | Backup History |
+| POST | `/api/backups/run` | Run Manual Backup |
+
+---
+
+## 📊 Dashboard
+
+| Method | Endpoint | Description |
+|---------|----------|-------------|
+| GET | `/api/dashboard/stats` | Dashboard Statistics |
+
+---
+
+## ⏰ Scheduling
+
+| Method | Endpoint | Description |
+|---------|----------|-------------|
+| GET | `/api/schedules` | Get Schedules |
+| POST | `/api/schedules` | Create Schedule |
+
+---
+
+# 💻 Local Installation
+
+## Prerequisites
+
+- Node.js (v18 or above)
+- MySQL Server (v8+)
+
+---
+
+## Clone Repository
+
 ```bash
 git clone https://github.com/milandhal/Backup-Monitoring-System.git
+
 cd Backup-Monitoring-System
 ```
 
-### 2. Set Up Database Schema
-Import `bms.sql` into your local MySQL server:
+---
+
+## Create Database
+
+```sql
+CREATE DATABASE bms;
+```
+
+Import the SQL file:
+
 ```bash
-mysql -u root -p -e "CREATE DATABASE bms;"
 mysql -u root -p bms < bms.sql
 ```
 
-### 3. Configure Environment Variables
-Navigate to the `backend/` directory and update `.env`:
+---
+
+## Configure Environment Variables
+
+Create a `.env` file inside the **backend** folder.
+
 ```env
 DB_HOST=localhost
 DB_USER=root
-DB_PASSWORD=your_mysql_password
+DB_PASSWORD=your_password
 DB_NAME=bms
 DB_PORT=3306
+
 PORT=5000
 ```
 
-### 4. Install Dependencies & Start Server
+---
+
+## Install Dependencies
+
 ```bash
 cd backend
+
 npm install
+```
+
+---
+
+## Run the Server
+
+```bash
 npm run dev
 ```
 
-The application backend will start on `http://localhost:5000` and serve the frontend at `http://localhost:5000/`.
+Server will start at
+
+```
+http://localhost:5000
+```
 
 ---
 
-## ☁️ Cloud Deployment (Vercel)
+# ☁️ Deploy on Vercel
 
-This repository includes a `vercel.json` file optimized for Vercel Serverless Functions.
+This project is fully configured for **Vercel Serverless Deployment**.
 
-1. **Push your code to GitHub**.
-2. **Import the repository into Vercel**.
-3. **Configure Environment Variables** on Vercel:
-   - `DB_HOST`: Cloud MySQL Host (Aiven, TiDB, Railway)
-   - `DB_USER`: Database User
-   - `DB_PASSWORD`: Database Password
-   - `DB_NAME`: Database Name (`bms`)
-   - `DB_PORT`: `3306`
-4. Click **Deploy**.
+### Steps
+
+1. Fork or Clone the Repository.
+
+2. Push the project to GitHub.
+
+3. Import Repository into Vercel.
+
+4. Add Environment Variables.
+
+```
+DB_HOST
+
+DB_USER
+
+DB_PASSWORD
+
+DB_NAME
+
+DB_PORT
+```
+
+5. Deploy.
 
 ---
 
-## Author
+# 📊 Project Highlights
 
-Milan Dhal
+✅ Enterprise Dashboard
 
+✅ Backup Monitoring
+
+✅ Manual Backup Trigger
+
+✅ Automated Scheduler
+
+✅ Backup Reports
+
+✅ Instance Management
+
+✅ Authentication System
+
+✅ MySQL Connection Pool
+
+✅ REST APIs
+
+✅ Vercel Deployment Ready
+
+---
+
+# 🔮 Future Enhancements
+
+- Email Notifications
+- SMS Alerts
+- AWS S3 Backup Storage
+- Azure Blob Storage
+- Google Drive Backup
+- Backup Compression
+- Backup Encryption
+- Docker Support
+- Kubernetes Deployment
+- Role-Based Access Control (RBAC)
+- Backup Restore Functionality
+- Real-Time WebSocket Monitoring
+
+---
+
+# 📄 License
+
+This project is licensed under the **ISC License**.
+
+---
+
+# 👨‍💻 Author
+
+## Milan Dhal
+
+- **GitHub:** https://github.com/milandhal
+- **Project Demo:** https://drive.google.com/file/d/1wsdVdKZs5wq39RMFAsrHxaMk0B9-5Xuz/view?usp=drive_link
+
+---
+
+## ⭐ Support
+
+If you found this project helpful, please consider giving it a **⭐ Star** on GitHub.
+
+It motivates future development and improvements.
+
+---
